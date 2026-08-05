@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Layanan Sertifikat KPU Labura</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    .view-section { display: none; }
+    .view-section.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    #canvas-container { position: relative; border: 2px dashed #cbd5e1; display: inline-block; cursor: crosshair; max-width: 100%; overflow: auto; }
+    canvas { max-width: 100%; height: auto; }
+    html, body { overscroll-behavior-y: none; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans h-[100dvh] w-screen overflow-hidden flex flex-col">
+
+  <header class="bg-white shadow-sm border-b flex-none">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="navTo('home')">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/KPU_Logo.svg" alt="Logo KPU" class="w-10 h-10 object-contain">
+        <h1 class="text-xl font-bold text-orange-600">KPU Labuhanbatu Utara</h1>
+      </div>
+      <div>
+        <button id="btn-login-nav" onclick="navTo('login')" class="text-sm font-semibold text-gray-500 hover:text-orange-600 transition">Panel Admin</button>
+        <button id="btn-logout-nav" onclick="logoutAdmin()" class="hidden text-sm font-semibold text-red-500 hover:text-red-700 transition">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-6xl mx-auto w-full px-4 py-8 overflow-y-auto">
+    
+    <div id="view-home" class="view-section active text-center mt-4 sm:mt-10">
+      <h2 class="text-3xl font-bold mb-8">Layanan Mandiri Peserta</h2>
+      <div class="flex flex-col sm:flex-row justify-center gap-6">
+        <div onclick="checkAbsensiStatus()" class="bg-white p-8 rounded-2xl shadow hover:shadow-lg transition cursor-pointer border border-gray-100 flex-1 max-w-sm mx-auto w-full">
+          <div class="text-5xl mb-4">📝</div>
+          <h3 class="text-xl font-bold mb-2">Isi Daftar Hadir</h3>
+          <p class="text-gray-500 text-sm">Registrasi kehadiran Anda pada kegiatan KPU Labuhanbatu Utara.</p>
+        </div>
+        <div onclick="navTo('download')" class="bg-white p-8 rounded-2xl shadow hover:shadow-lg transition cursor-pointer border border-gray-100 flex-1 max-w-sm mx-auto w-full">
+          <div class="text-5xl mb-4">📜</div>
+          <h3 class="text-xl font-bold mb-2">Unduh Sertifikat</h3>
+          <p class="text-gray-500 text-sm">Cari dan unduh sertifikat elektronik partisipasi Anda.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="view-hadir" class="view-section max-w-md mx-auto bg-white p-8 rounded-2xl shadow mb-8">
+      <button onclick="navTo('home')" class="text-sm text-gray-400 mb-4 hover:text-gray-700">← Kembali ke Menu Utama</button>
+      <h2 class="text-2xl font-bold mb-6">Form Daftar Hadir</h2>
+      <form id="form-hadir" onsubmit="submitHadir(event)">
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1">Nama Lengkap & Gelar</label>
+          <input type="text" id="h-nama" required class="w-full border rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-orange-500">
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1">Instansi / Organisasi</label>
+          <input type="text" id="h-instansi" required class="w-full border rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-orange-500">
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1">Email Aktif</label>
+          <input type="email" id="h-email" required class="w-full border rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-orange-500">
+        </div>
+        <div class="mb-6">
+          <label class="block text-sm font-medium mb-1">Nomor HP / WA</label>
+          <input type="number" id="h-hp" required class="w-full border rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-orange-500">
+        </div>
+        <button type="submit" class="w-full bg-orange-600 text-white font-bold py-3 rounded-lg hover:bg-orange-700 transition">Kirim Data</button>
+      </form>
+    </div>
+
+    <!-- VIEW: DOWNLOAD SERTIFIKAT (Dengan Checkbox) -->
+    <div id="view-download" class="view-section max-w-md mx-auto bg-white p-8 rounded-2xl shadow mb-8">
+      <button onclick="navTo('home')" class="text-sm text-gray-400 mb-4 hover:text-gray-700">← Kembali ke Menu Utama</button>
+      <h2 class="text-2xl font-bold mb-6">Cari Sertifikat</h2>
+      <form id="form-download" onsubmit="submitDownload(event)">
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1">Nama Lengkap (Sesuai Daftar Hadir)</label>
+          <input type="text" id="d-nama" required class="w-full border rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-orange-500">
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1">Email</label>
+          <input type="email" id="d-email" required class="w-full border rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-orange-500">
+        </div>
+        <div class="mb-6 flex items-center gap-2">
+          <input type="checkbox" id="d-kirim-email" class="w-4 h-4 text-orange-600 rounded">
+          <label for="d-kirim-email" class="text-sm text-gray-600">Kirim ke Email saya saja</label>
+        </div>
+        <button type="submit" class="w-full bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 transition">Proses Sertifikat</button>
+      </form>
+    </div>
+
+    <div id="view-login" class="view-section max-w-sm mx-auto bg-white p-8 rounded-2xl shadow mt-10">
+      <h2 class="text-2xl font-bold mb-6 text-center">Panel Admin</h2>
+      <form id="form-login" onsubmit="submitLogin(event)">
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1">Username</label>
+          <input type="text" id="l-user" required class="w-full border rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-gray-800">
+        </div>
+        <div class="mb-6">
+          <label class="block text-sm font-medium mb-1">Password</label>
+          <input type="password" id="l-pass" required class="w-full border rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-gray-800">
+        </div>
+        <button type="submit" class="w-full bg-gray-800 text-white font-bold py-3 rounded-lg hover:bg-gray-900 transition">Masuk</button>
+      </form>
+    </div>
+
+    <div id="view-admin" class="view-section bg-white p-6 rounded-2xl shadow mb-8">
+      <button onclick="navTo('home')" class="text-sm text-blue-600 font-bold mb-4 hover:text-blue-800 bg-blue-50 px-3 py-1 rounded-full">← Kembali ke Menu Utama</button>
+      <h2 class="text-2xl font-bold mb-6">Manajemen & Generate Sertifikat</h2>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <h3 class="text-lg font-bold mb-3 border-b pb-2">1. Konfigurasi Template</h3>
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-1">Upload Template (JPG/PNG)</label>
+            <input type="file" id="template-upload" accept="image/png, image/jpeg" class="w-full border p-2 rounded text-sm" onchange="loadTemplate(event)">
+          </div>
+          <div class="mb-4 grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium mb-1">Ukuran Font (pt)</label>
+              <input type="number" id="font-size" value="36" class="w-full border p-2 rounded" onchange="previewCanvas()">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">Alignment</label>
+              <select id="font-align" class="w-full border p-2 rounded" onchange="previewCanvas()">
+                <option value="center">Center (Tengah)</option>
+                <option value="left">Left (Kiri)</option>
+              </select>
+            </div>
+          </div>
+          <p class="text-xs text-gray-500 mb-2"><i>Klik & Drag (Tarik Garis) pada gambar di bawah untuk menentukan posisi dan area "Nama Peserta".</i></p>
+          <div id="canvas-container" class="bg-gray-100 mb-2">
+            <canvas id="cert-canvas"></canvas>
+          </div>
+          <p class="text-sm font-mono bg-gray-100 p-2 rounded border" id="coord-info">Koordinat: X=0, Y=0</p>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold mb-3 border-b pb-2 flex justify-between items-center">
+            2. Pilih Peserta
+            <button onclick="loadDataPeserta()" class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded hover:bg-blue-200">🔄 Refresh Data</button>
+          </h3>
+          <div class="overflow-x-auto border rounded max-h-96">
+            <table class="w-full text-sm text-left">
+              <thead class="bg-gray-50 text-gray-700 sticky top-0">
+                <tr>
+                  <th class="p-3 w-10"><input type="checkbox" id="check-all" onchange="toggleCheckAll()"></th>
+                  <th class="p-3">Nama Lengkap</th>
+                  <th class="p-3">Email</th>
+                </tr>
+              </thead>
+              <tbody id="table-peserta">
+                <tr><td colspan="3" class="p-4 text-center text-gray-500">Memuat data...</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="mt-6">
+            <button onclick="generateMassal()" class="w-full bg-orange-600 text-white font-bold py-3 rounded-lg hover:bg-orange-700 transition shadow-lg">🚀 Generate & Simpan ke Drive</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 border-t pt-8">
+        <div class="bg-gray-50 p-5 rounded-xl border">
+          <h3 class="text-lg font-bold mb-4 border-b pb-2">⏱️ Pengaturan Waktu Absensi</h3>
+          <p class="text-xs text-gray-500 mb-4">Biarkan kosong jika absensi ingin dibuka terus menerus.</p>
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-1">Mulai Buka (Start Time)</label>
+            <input type="datetime-local" id="t-start" class="w-full border p-2 rounded">
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-1">Tutup Sesi (End Time)</label>
+            <input type="datetime-local" id="t-end" class="w-full border p-2 rounded">
+          </div>
+          <button onclick="saveTimer()" class="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700">Simpan Pengaturan Waktu</button>
+        </div>
+
+        <div class="bg-gray-50 p-5 rounded-xl border">
+          <h3 class="text-lg font-bold mb-4 border-b pb-2">🔐 Ubah Password Admin</h3>
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-1">Password Lama</label>
+            <input type="password" id="p-old" class="w-full border p-2 rounded">
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-1">Password Baru</label>
+            <input type="password" id="p-new" class="w-full border p-2 rounded">
+          </div>
+          <button onclick="changePassword()" class="w-full bg-red-600 text-white font-bold py-2 rounded hover:bg-red-700">Ganti Password</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-gray-800 text-white text-center py-4 flex-none">
+    <p class="text-sm font-medium tracking-wide">&copy; <span id="year"></span> KPU Kabupaten Labuhanbatu Utara.</p>
+    <p class="text-xs text-gray-400 mt-1">Version 1.0 - Beta.</p>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // ==========================================
+    // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT DI BAWAH INI
+    // ==========================================
+    const GAS_URL = "URL_GAS_ANDA_DISINI"; 
+
+    // Helper untuk komunikasi REST API (Frontend -> GAS)
+    async function fetchAPI(action, params = {}, method = 'GET') {
+      let url = GAS_URL + "?action=" + action;
+      let options = { method: method };
+
+      if (method === 'GET') {
+        for (let key in params) url += `&${key}=${encodeURIComponent(params[key])}`;
+      } else {
+        options.body = JSON.stringify({ action: action, ...params });
+        options.headers = { 'Content-Type': 'text/plain;charset=utf-8' }; 
+      }
+      const response = await fetch(url, options);
+      return await response.json();
+    }
+
+    function navTo(view) {
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      document.getElementById('view-' + view).classList.add('active');
+      if(sessionStorage.getItem("admin_logged_in") === "true") {
+        document.getElementById("btn-login-nav").textContent = "Panel Admin";
+        document.getElementById("btn-login-nav").setAttribute("onclick", "navTo('admin')");
+        document.getElementById("btn-logout-nav").classList.remove("hidden");
+      } else {
+        document.getElementById("btn-login-nav").textContent = "Panel Admin";
+        document.getElementById("btn-login-nav").setAttribute("onclick", "navTo('login')");
+        document.getElementById("btn-logout-nav").classList.add("hidden");
+      }
+    }
+
+    async function checkAbsensiStatus() {
+      Swal.fire({ title: 'Memeriksa Akses...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
+      try {
+        const res = await fetchAPI('cekTimer');
+        if(res.isOpen) { Swal.close(); navTo('hadir'); } 
+        else { Swal.fire('Akses Ditutup', res.message, 'warning'); }
+      } catch (e) { Swal.fire('Error', 'Gagal terhubung server', 'error'); }
+    }
+
+    async function submitHadir(e) {
+      e.preventDefault();
+      Swal.fire({ title: 'Memproses...', text: 'Menyimpan data kehadiran...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
+      const data = [ document.getElementById('h-nama').value, document.getElementById('h-instansi').value, document.getElementById('h-email').value, document.getElementById('h-hp').value ];
+      try {
+        const res = await fetchAPI('hadir', { data: data }, 'POST');
+        if (res.success) {
+          Swal.fire('Berhasil!', res.message, 'success').then(() => { document.getElementById('form-hadir').reset(); navTo('home'); });
+        } else { Swal.fire('Peringatan', res.message, 'warning'); }
+      } catch (e) { Swal.fire('Error', 'Gagal menyimpan data', 'error'); }
+    }
+
+    // Fungsi Download menyesuaikan status Checkbox
+    async function submitDownload(e) {
+      e.preventDefault();
+      Swal.fire({ title: 'Memproses...', text: 'Mencari sertifikat Anda...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
+      
+      const nama = document.getElementById('d-nama').value;
+      const email = document.getElementById('d-email').value;
+      const kirimEmail = document.getElementById('d-kirim-email').checked;
+      
+      try {
+        // Kirim status checkbox ke backend
+        const res = await fetchAPI('download', { nama: nama, email: email, kirimEmail: kirimEmail }, 'GET');
+        
+        if (res.success) {
+          if (kirimEmail) {
+            Swal.fire('Berhasil!', res.message, 'success');
+          } else {
+            Swal.fire({ title: 'Berhasil!', text: res.message, icon: 'success', confirmButtonText: 'Unduh Langsung' })
+              .then((result) => { if (result.isConfirmed) window.open(res.url, '_blank'); });
+          }
+          document.getElementById('form-download').reset();
+        } else { Swal.fire('Gagal', res.message, 'warning'); }
+      } catch (e) { Swal.fire('Error', 'Gagal terhubung server', 'error'); }
+    }
+
+    async function submitLogin(e) {
+      e.preventDefault();
+      Swal.fire({ title: 'Verifikasi...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
+      try {
+        const res = await fetchAPI('login', { user: document.getElementById('l-user').value, pass: document.getElementById('l-pass').value }, 'GET');
+        if (res.success) {
+          sessionStorage.setItem("admin_logged_in", "true");
+          Swal.close(); navTo('admin'); loadDataPeserta(); loadTimerInfo();
+        } else { Swal.fire('Akses Ditolak', res.message, 'error'); }
+      } catch (e) { Swal.fire('Error', 'Koneksi gagal', 'error'); }
+    }
+
+    function logoutAdmin() { sessionStorage.removeItem("admin_logged_in"); navTo('home'); }
+
+    async function loadTimerInfo() {
+      const res = await fetchAPI('getTimer');
+      document.getElementById('t-start').value = res.start;
+      document.getElementById('t-end').value = res.end;
+    }
+
+    async function saveTimer() {
+      Swal.fire({ title: 'Menyimpan...', didOpen: () => { Swal.showLoading(); }});
+      const start = document.getElementById('t-start').value, end = document.getElementById('t-end').value;
+      await fetchAPI('simpanTimer', { start: start, end: end }, 'POST');
+      Swal.fire('Tersimpan', 'Waktu absensi diatur', 'success');
+    }
+
+    async function changePassword() {
+      const oldP = document.getElementById('p-old').value, newP = document.getElementById('p-new').value;
+      if(!oldP || !newP) return Swal.fire('Error', 'Lengkapi kolom password!', 'warning');
+      Swal.fire({ title: 'Memproses...', didOpen: () => { Swal.showLoading(); }});
+      const res = await fetchAPI('ubahPass', { oldPass: oldP, newPass: newP }, 'POST');
+      if(res.success) { Swal.fire('Berhasil', res.message, 'success'); document.getElementById('p-old').value = ''; document.getElementById('p-new').value = ''; } 
+      else { Swal.fire('Gagal', res.message, 'error'); }
+    }
+
+    // CANVAS LOGIC
+    let templateImg = new Image(), canvas = document.getElementById('cert-canvas'), ctx = canvas.getContext('2d'), rect = { x: 50, y: 50, w: 300, h: 50 }, isDragging = false;
+    function loadTemplate(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        templateImg.onload = function() {
+          canvas.width = templateImg.width; canvas.height = templateImg.height; canvas.style.width = '100%';
+          rect = { x: canvas.width * 0.1, y: canvas.height * 0.4, w: canvas.width * 0.8, h: canvas.height * 0.1 };
+          previewCanvas();
+        }
+        templateImg.src = event.target.result;
+      }
+      reader.readAsDataURL(file);
+    }
+    function previewCanvas() {
+      if (!templateImg.src) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.drawImage(templateImg, 0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = "rgba(255, 0, 0, 0.5)"; ctx.lineWidth = 4; ctx.strokeRect(rect.x, rect.y, rect.w, rect.h);
+      ctx.fillStyle = "rgba(255, 0, 0, 0.1)"; ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
+      const fontSize = parseInt(document.getElementById('font-size').value) || 36, align = document.getElementById('font-align').value;
+      ctx.font = `bold ${fontSize}px Arial`; ctx.fillStyle = "#000000"; ctx.textBaseline = "middle";
+      let textX = align === 'center' ? rect.x + (rect.w / 2) : rect.x;
+      ctx.textAlign = align; ctx.fillText("[NAMA PESERTA]", textX, rect.y + (rect.h / 2));
+      document.getElementById('coord-info').textContent = `Koordinat: X=${Math.round(textX)}, Y=${Math.round(rect.y + (rect.h / 2))}, Size=${fontSize}px`;
+    }
+    canvas.addEventListener('mousedown', (e) => { isDragging = true; updateRect(e); });
+    canvas.addEventListener('mousemove', (e) => { if (isDragging) updateRect(e); });
+    canvas.addEventListener('mouseup', () => { isDragging = false; });
+    function updateRect(e) {
+      const cssRect = canvas.getBoundingClientRect(), scaleX = canvas.width / cssRect.width, scaleY = canvas.height / cssRect.height;
+      rect.x = (e.clientX - cssRect.left) * scaleX; rect.y = (e.clientY - cssRect.top) * scaleY; previewCanvas();
+    }
+
+    let dbPeserta = [];
+    async function loadDataPeserta() {
+      document.getElementById('table-peserta').innerHTML = '<tr><td colspan="3" class="p-4 text-center text-gray-500">Memuat...</td></tr>';
+      try {
+        const res = await fetchAPI('getData');
+        dbPeserta = res.data;
+        if (!dbPeserta || dbPeserta.length === 0) { document.getElementById('table-peserta').innerHTML = '<tr><td colspan="3" class="text-center p-4">Belum ada data.</td></tr>'; return; }
+        let html = '';
+        dbPeserta.forEach((row, i) => { html += `<tr class="border-b"><td class="p-3"><input type="checkbox" class="chk-peserta" value="${i}"></td><td class="p-3 font-semibold">${row[1]}</td><td class="p-3">${row[3]}</td></tr>`; });
+        document.getElementById('table-peserta').innerHTML = html;
+      } catch (e) { document.getElementById('table-peserta').innerHTML = `<tr><td colspan="3" class="text-center p-4 text-red-500">Error load data.</td></tr>`; }
+    }
+    function toggleCheckAll() {
+      const isChecked = document.getElementById('check-all').checked;
+      document.querySelectorAll('.chk-peserta').forEach(el => el.checked = isChecked);
+    }
+
+    async function generateMassal() {
+      if (!templateImg.src) return Swal.fire('Error', 'Upload template terlebih dahulu!', 'error');
+      const checks = document.querySelectorAll('.chk-peserta:checked');
+      if (checks.length === 0) return Swal.fire('Peringatan', 'Pilih minimal 1 peserta.', 'warning');
+      
+      const fontSize = parseInt(document.getElementById('font-size').value) || 36, align = document.getElementById('font-align').value;
+      const textX = align === 'center' ? rect.x + (rect.w / 2) : rect.x, textY = rect.y + (rect.h / 2);
+      const orientation = canvas.width > canvas.height ? 'l' : 'p';
+      
+      Swal.fire({ title: 'Mencetak PDF...', html: `Memproses <b>0</b> dari ${checks.length} peserta`, allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+      let successCount = 0;
+      for (let i = 0; i < checks.length; i++) {
+        let pIndex = checks[i].value, nama = dbPeserta[pIndex][1], email = dbPeserta[pIndex][3], fileName = `${nama}_${email}.pdf`;
+        Swal.update({ html: `Memproses <b>${i+1}</b> dari ${checks.length} peserta<br/><small>${nama}</small>` });
+        const pdf = new window.jspdf.jsPDF({ orientation: orientation, unit: 'px', format: [canvas.width, canvas.height] });
+        pdf.addImage(templateImg.src, 'JPEG', 0, 0, canvas.width, canvas.height);
+        pdf.setFont("helvetica", "bold"); pdf.setFontSize(fontSize); pdf.setTextColor(0, 0, 0); 
+        pdf.text(nama, textX, textY, { align: align, baseline: 'middle' });
+        
+        try {
+          await fetchAPI('simpanPdf', { base64Data: pdf.output('datauristring'), filename: fileName }, 'POST');
+          successCount++;
+        } catch (err) { console.error("Gagal:", err); }
+      }
+      Swal.fire('Selesai!', `Berhasil membuat dan menyimpan ${successCount} Sertifikat ke Drive.`, 'success');
+    }
+  </script>
+</body>
+</html>
