@@ -8,7 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    /* Prevent Scrolling and Overscroll Effects */
+    /* Prevent Scrolling and Overscroll Effects di Body */
     html, body {
       height: 100dvh;
       width: 100vw;
@@ -19,237 +19,257 @@
     }
 
     .view-section { display: none; }
-    .view-section.active { display: flex; animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .view-section.active { display: flex; animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     
     #canvas-container { position: relative; border: 2px dashed #cbd5e1; display: inline-block; cursor: crosshair; max-width: 100%; overflow: auto; }
     canvas { max-width: 100%; height: auto; }
 
-    /* Custom Scrollbar Inside Scrollable Containers */
-    .custom-scroll::-webkit-scrollbar { width: 4px; }
-    .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    /* Custom Scrollbar */
+    .custom-scroll::-webkit-scrollbar { width: 6px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.5); border-radius: 10px; }
+    .custom-scroll::-webkit-scrollbar-track { background: transparent; }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans h-[100dvh] w-screen overflow-hidden flex flex-col select-none">
 
-  <!-- HEADER -->
-  <header class="bg-white/95 backdrop-blur shadow-sm border-b border-slate-200/80 flex-none z-20">
-    <div class="max-w-md md:max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
-      <div class="flex items-center gap-3 cursor-pointer" onclick="navTo('home')">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/KPU_Logo.svg" alt="Logo KPU" class="w-9 h-9 object-contain">
-        <h1 class="text-lg sm:text-xl font-bold text-orange-600 tracking-tight">KPU Kabupaten Labuhanbatu Utara</h1>
-      </div>
-      <div>
-        <!-- Disembunyikan secara visual jika belum login / hanya bisa dibuka via Alt + Click -->
-        <button id="btn-login-nav" class="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg border border-slate-200 active:scale-95 transition">
-          Panel Admin
-        </button>
-        <button id="btn-logout-nav" onclick="logoutAdmin()" class="hidden text-xs font-bold bg-red-50 text-red-600 px-3 py-1.5 rounded-lg border border-red-200 active:scale-95 transition">
-          Logout
-        </button>
-      </div>
-    </div>
-  </header>
+<!-- WALLPAPER BACKGROUND: Ganti URL di dalam bg-[url('...')] dengan link gambar Anda -->
+<body class="font-sans h-[100dvh] w-screen overflow-hidden flex flex-col select-none relative bg-slate-900 bg-[url('https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center bg-no-repeat">
 
-  <!-- MAIN CONTAINER FIXED HEIGHT -->
-  <main class="flex-grow max-w-md md:max-w-4xl mx-auto w-full px-4 py-4 overflow-y-auto custom-scroll flex flex-col">
-    
-    <!-- VIEW: HOME (MENU PENGGUNA - TAMPILAN ATAS-BAWAH BESAR) -->
-    <div id="view-home" class="view-section active flex-col justify-center my-auto py-2">
-      <div class="text-center mb-6">
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">Layanan Mandiri</h2>
-        <p class="text-xs sm:text-sm text-slate-500 mt-1 font-medium">Sistem Kehadiran & E-Sertifikat KPU Kabupaten Labuhanbatu Utara</p>
-      </div>
+  <!-- OVERLAY GELAP UNTUK WALLPAPER AGAR TEKS TETAP TERBACA -->
+  <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] z-0"></div>
 
-      <!-- Menu Cards Stacked Vertically -->
-      <div class="flex flex-col gap-4 w-full">
-        <!-- Card 1: Isi Daftar Hadir -->
-        <div onclick="checkAbsensiStatus()" class="group relative bg-gradient-to-br from-orange-500 to-amber-600 text-white p-6 rounded-2xl shadow-lg shadow-orange-500/20 active:scale-[0.98] transition-all cursor-pointer overflow-hidden border border-orange-400">
-          <div class="absolute -right-4 -bottom-4 text-white/10 text-8xl font-black select-none pointer-events-none">📝</div>
-          <div class="flex items-center gap-4 relative z-10">
-            <div class="w-14 h-14 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center text-3xl shrink-0 shadow-inner">📝</div>
-            <div>
-              <h3 class="text-xl font-black text-white tracking-wide">Isi Daftar Hadir</h3>
-              <p class="text-orange-100 text-xs mt-0.5 font-medium leading-snug">Registrasi kehadiran kegiatan secara cepat & mandiri.</p>
-            </div>
-          </div>
-        </div>
+  <!-- BUNGKUSAN KONTEN UTAMA (Di Atas Wallpaper) -->
+  <div class="relative z-10 flex flex-col h-full w-full">
 
-        <!-- Card 2: Unduh Sertifikat -->
-        <div onclick="navTo('download')" class="group relative bg-gradient-to-br from-emerald-600 to-teal-700 text-white p-6 rounded-2xl shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition-all cursor-pointer overflow-hidden border border-emerald-500">
-          <div class="absolute -right-4 -bottom-4 text-white/10 text-8xl font-black select-none pointer-events-none">📜</div>
-          <div class="flex items-center gap-4 relative z-10">
-            <div class="w-14 h-14 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center text-3xl shrink-0 shadow-inner">📜</div>
-            <div>
-              <h3 class="text-xl font-black text-white tracking-wide">Unduh Sertifikat</h3>
-              <p class="text-emerald-100 text-xs mt-0.5 font-medium leading-snug">Cari dan unduh sertifikat elektronik partisipasi Anda.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- VIEW: DAFTAR HADIR -->
-    <div id="view-hadir" class="view-section flex-col bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 my-auto">
-      <button onclick="navTo('home')" class="text-xs font-bold text-slate-400 mb-4 hover:text-slate-700 w-fit">← Kembali ke Menu Utama</button>
-      <h2 class="text-xl font-extrabold text-slate-800 mb-5">Form Daftar Hadir</h2>
-      <form id="form-hadir" onsubmit="submitHadir(event)" class="flex flex-col gap-3.5">
-        <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap & Gelar</label>
-          <input type="text" id="h-nama" required class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium">
+    <!-- HEADER -->
+    <header class="bg-white/90 backdrop-blur-md shadow-sm border-b border-white/20 flex-none">
+      <div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="navTo('home')">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/KPU_Logo.svg" alt="Logo KPU" class="w-9 h-9 object-contain drop-shadow-sm">
+          <h1 class="text-lg sm:text-xl font-bold text-orange-600 tracking-tight drop-shadow-sm">KPU Labura</h1>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Instansi / Organisasi</label>
-          <input type="text" id="h-instansi" required class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Email Aktif</label>
-          <input type="email" id="h-email" required class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Nomor HP / WA</label>
-          <input type="number" id="h-hp" required class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium">
-        </div>
-
-        <!-- Checkbox Opsi Kirim Email Sertifikat -->
-        <div class="mt-1 flex items-start gap-2.5 bg-orange-50/80 p-3 rounded-xl border border-orange-200/80">
-          <input type="checkbox" id="h-auto-email" class="w-4 h-4 mt-0.5 text-orange-600 rounded border-slate-300 focus:ring-orange-500 cursor-pointer">
-          <label for="h-auto-email" class="text-xs text-slate-700 font-medium leading-tight cursor-pointer">
-            Kirim ke email saya jika sertifikat sudah tersedia
-          </label>
-        </div>
-
-        <button type="submit" class="w-full mt-2 bg-orange-600 text-white font-bold py-3.5 rounded-xl hover:bg-orange-700 active:scale-[0.98] transition shadow-md shadow-orange-600/20 text-sm">
-          Kirim Data Kehadiran
-        </button>
-      </form>
-    </div>
-
-    <!-- VIEW: DOWNLOAD SERTIFIKAT (TANPA CHECKBOX) -->
-    <div id="view-download" class="view-section flex-col bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 my-auto">
-      <button onclick="navTo('home')" class="text-xs font-bold text-slate-400 mb-4 hover:text-slate-700 w-fit">← Kembali ke Menu Utama</button>
-      <h2 class="text-xl font-extrabold text-slate-800 mb-5">Cari Sertifikat</h2>
-      <form id="form-download" onsubmit="submitDownload(event)" class="flex flex-col gap-3.5">
-        <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap (Sesuai Absensi)</label>
-          <input type="text" id="d-nama" required class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Email</label>
-          <input type="email" id="d-email" required class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium">
-        </div>
-        <button type="submit" class="w-full mt-2 bg-emerald-600 text-white font-bold py-3.5 rounded-xl hover:bg-emerald-700 active:scale-[0.98] transition shadow-md shadow-emerald-600/20 text-sm">
-          Cari & Unduh Sertifikat
-        </button>
-      </form>
-    </div>
-
-    <!-- VIEW: ADMIN LOGIN -->
-    <div id="view-login" class="view-section flex-col bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 my-auto">
-      <h2 class="text-xl font-extrabold text-slate-800 mb-5 text-center">Panel Admin</h2>
-      <form id="form-login" onsubmit="submitLogin(event)" class="flex flex-col gap-3.5">
-        <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Username</label>
-          <input type="text" id="l-user" required class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-slate-800 font-medium">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Password</label>
-          <input type="password" id="l-pass" required class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-slate-800 font-medium">
-        </div>
-        <button type="submit" class="w-full mt-2 bg-slate-800 text-white font-bold py-3.5 rounded-xl hover:bg-slate-900 active:scale-[0.98] transition shadow-md text-sm">
-          Masuk Administrator
-        </button>
-      </form>
-    </div>
-
-    <!-- VIEW: ADMIN DASHBOARD -->
-    <div id="view-admin" class="view-section flex-col bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 my-auto">
-      <button onclick="navTo('home')" class="text-xs text-blue-600 font-bold mb-4 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg w-fit">← Kembali ke Menu Utama</button>
-      <h2 class="text-xl font-extrabold text-slate-800 mb-6">Dashboard Admin</h2>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <h3 class="text-sm font-bold text-slate-700 mb-3 border-b pb-2">1. Konfigurasi Template</h3>
-          <div class="mb-3">
-            <label class="block text-xs font-medium mb-1">Upload Template (JPG/PNG)</label>
-            <input type="file" id="template-upload" accept="image/png, image/jpeg" class="w-full border p-2 rounded-lg text-xs" onchange="loadTemplate(event)">
-          </div>
-          <div class="mb-3 grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-medium mb-1">Ukuran Font (pt)</label>
-              <input type="number" id="font-size" value="36" class="w-full border p-2 rounded-lg text-xs" onchange="previewCanvas()">
-            </div>
-            <div>
-              <label class="block text-xs font-medium mb-1">Alignment</label>
-              <select id="font-align" class="w-full border p-2 rounded-lg text-xs" onchange="previewCanvas()">
-                <option value="center">Center (Tengah)</option>
-                <option value="left">Left (Kiri)</option>
-              </select>
-            </div>
-          </div>
-          <div id="canvas-container" class="bg-slate-100 mb-2 rounded-lg overflow-hidden border">
-            <canvas id="cert-canvas"></canvas>
-          </div>
-          <p class="text-xs font-mono bg-slate-100 p-2 rounded-lg border text-slate-600" id="coord-info">Koordinat: X=0, Y=0</p>
-        </div>
-
-        <div>
-          <h3 class="text-sm font-bold text-slate-700 mb-3 border-b pb-2 flex justify-between items-center">
-            2. Data Kehadiran Peserta
-            <button onclick="loadDataPeserta()" class="text-xs bg-blue-100 text-blue-700 px-2.5 py-1 rounded-md hover:bg-blue-200">🔄 Refresh</button>
-          </h3>
-          <div class="overflow-x-auto border rounded-xl max-h-60 custom-scroll">
-            <table class="w-full text-xs text-left">
-              <thead class="bg-slate-50 text-slate-700 sticky top-0 border-b">
-                <tr>
-                  <th class="p-2.5 w-8"><input type="checkbox" id="check-all" onchange="toggleCheckAll()"></th>
-                  <th class="p-2.5">Nama</th>
-                  <th class="p-2.5">Email</th>
-                </tr>
-              </thead>
-              <tbody id="table-peserta">
-                <tr><td colspan="3" class="p-4 text-center text-slate-400">Memuat data...</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <button onclick="generateMassal()" class="w-full mt-4 bg-orange-600 text-white font-bold py-3 rounded-xl hover:bg-orange-700 active:scale-[0.98] transition shadow-md text-xs">
-            🚀 Generate & Simpan Sertifikat
+          <!-- Disembunyikan secara visual jika belum login / hanya bisa dibuka via Alt + Click -->
+          <button id="btn-login-nav" class="text-xs font-bold bg-white/50 text-slate-700 px-4 py-2 rounded-xl border border-slate-200/50 shadow-sm active:scale-95 transition hover:bg-white/80">
+            Panel Admin
+          </button>
+          <button id="btn-logout-nav" onclick="logoutAdmin()" class="hidden text-xs font-bold bg-red-50 text-red-600 px-4 py-2 rounded-xl border border-red-200 shadow-sm active:scale-95 transition">
+            Logout
           </button>
         </div>
       </div>
+    </header>
+
+    <!-- MAIN CONTAINER FIXED HEIGHT DENGAN SCROLL INTERNAL -->
+    <main class="flex-grow max-w-5xl mx-auto w-full px-4 py-6 overflow-y-auto custom-scroll flex flex-col">
       
-      <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 border-t pt-6">
-        <div class="bg-slate-50 p-4 rounded-xl border">
-          <h3 class="text-xs font-bold text-slate-700 mb-3">⏱️ Pengaturan Waktu Absensi</h3>
-          <div class="mb-2">
-            <label class="block text-[10px] font-semibold text-slate-500 mb-1">Mulai Buka</label>
-            <input type="datetime-local" id="t-start" class="w-full border p-2 rounded-lg text-xs">
-          </div>
-          <div class="mb-3">
-            <label class="block text-[10px] font-semibold text-slate-500 mb-1">Tutup Sesi</label>
-            <input type="datetime-local" id="t-end" class="w-full border p-2 rounded-lg text-xs">
-          </div>
-          <button onclick="saveTimer()" class="w-full bg-blue-600 text-white font-bold py-2 rounded-lg text-xs hover:bg-blue-700">Simpan Waktu</button>
+      <!-- VIEW: HOME (MENU PENGGUNA) -->
+      <div id="view-home" class="view-section active flex-col justify-center my-auto py-2 w-full">
+        <!-- Judul KPU (Glassmorphism Card) -->
+        <div class="text-center mb-6 bg-white/80 backdrop-blur-xl p-6 rounded-[2rem] shadow-xl border border-white/50 max-w-md mx-auto w-full">
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">Layanan Mandiri</h2>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1 font-medium">Sistem Kehadiran & E-Sertifikat KPU Kabupaten Labuhanbatu Utara</p>
         </div>
 
-        <div class="bg-slate-50 p-4 rounded-xl border">
-          <h3 class="text-xs font-bold text-slate-700 mb-3">🔐 Ubah Password Admin</h3>
-          <div class="mb-2">
-            <input type="password" id="p-old" placeholder="Password Lama" class="w-full border p-2 rounded-lg text-xs">
+        <!-- Menu Cards (Dibatasi max-w-md agar tidak jelek/lebar di PC) -->
+        <div class="flex flex-col gap-5 w-full max-w-md mx-auto">
+          <!-- Card 1: Isi Daftar Hadir -->
+          <div onclick="checkAbsensiStatus()" class="group relative bg-gradient-to-br from-orange-500 to-amber-600 text-white p-6 rounded-[2rem] shadow-xl shadow-orange-500/30 active:scale-[0.97] hover:-translate-y-1 transition-all cursor-pointer overflow-hidden border border-orange-400/50">
+            <div class="absolute -right-4 -bottom-4 text-white/10 text-8xl font-black select-none pointer-events-none group-hover:scale-110 transition-transform duration-500">📝</div>
+            <div class="flex items-center gap-5 relative z-10">
+              <div class="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-3xl shrink-0 shadow-inner border border-white/20">📝</div>
+              <div>
+                <h3 class="text-xl font-black text-white tracking-wide">Isi Daftar Hadir</h3>
+                <p class="text-orange-50 text-xs mt-1 font-medium leading-relaxed">Registrasi kehadiran kegiatan secara cepat & mandiri.</p>
+              </div>
+            </div>
           </div>
-          <div class="mb-3">
-            <input type="password" id="p-new" placeholder="Password Baru" class="w-full border p-2 rounded-lg text-xs">
+
+          <!-- Card 2: Unduh Sertifikat -->
+          <div onclick="navTo('download')" class="group relative bg-gradient-to-br from-emerald-600 to-teal-700 text-white p-6 rounded-[2rem] shadow-xl shadow-emerald-600/30 active:scale-[0.97] hover:-translate-y-1 transition-all cursor-pointer overflow-hidden border border-emerald-500/50">
+            <div class="absolute -right-4 -bottom-4 text-white/10 text-8xl font-black select-none pointer-events-none group-hover:scale-110 transition-transform duration-500">📜</div>
+            <div class="flex items-center gap-5 relative z-10">
+              <div class="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-3xl shrink-0 shadow-inner border border-white/20">📜</div>
+              <div>
+                <h3 class="text-xl font-black text-white tracking-wide">Unduh Sertifikat</h3>
+                <p class="text-emerald-50 text-xs mt-1 font-medium leading-relaxed">Cari dan unduh sertifikat elektronik partisipasi Anda.</p>
+              </div>
+            </div>
           </div>
-          <button onclick="changePassword()" class="w-full bg-red-600 text-white font-bold py-2 rounded-lg text-xs hover:bg-red-700">Ganti Password</button>
         </div>
       </div>
-    </div>
-  </main>
+
+      <!-- VIEW: DAFTAR HADIR -->
+      <div id="view-hadir" class="view-section flex-col bg-white/95 backdrop-blur-xl p-8 rounded-[2rem] shadow-2xl border border-white/60 my-auto max-w-md mx-auto w-full">
+        <button onclick="navTo('home')" class="text-xs font-bold text-slate-400 mb-5 hover:text-slate-700 w-fit bg-slate-100 px-3 py-1.5 rounded-lg">← Kembali</button>
+        <h2 class="text-2xl font-extrabold text-slate-800 mb-6">Form Daftar Hadir</h2>
+        <form id="form-hadir" onsubmit="submitHadir(event)" class="flex flex-col gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1.5">Nama Lengkap & Gelar</label>
+            <input type="text" id="h-nama" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 font-medium transition-shadow shadow-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1.5">Instansi / Organisasi</label>
+            <input type="text" id="h-instansi" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 font-medium transition-shadow shadow-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1.5">Email Aktif</label>
+            <input type="email" id="h-email" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 font-medium transition-shadow shadow-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1.5">Nomor HP / WA</label>
+            <input type="number" id="h-hp" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 font-medium transition-shadow shadow-sm">
+          </div>
+
+          <!-- Checkbox Opsi Kirim Email Sertifikat -->
+          <div class="mt-2 flex items-start gap-3 bg-gradient-to-r from-orange-50 to-amber-50 p-4 rounded-xl border border-orange-200/80 shadow-sm">
+            <input type="checkbox" id="h-auto-email" class="w-5 h-5 mt-0.5 text-orange-600 rounded border-slate-300 focus:ring-orange-500 cursor-pointer">
+            <label for="h-auto-email" class="text-xs text-slate-700 font-bold leading-relaxed cursor-pointer">
+              Kirim ke email saya jika sertifikat sudah tersedia
+            </label>
+          </div>
+
+          <button type="submit" class="w-full mt-4 bg-gradient-to-r from-orange-600 to-amber-500 text-white font-black py-4 rounded-xl hover:from-orange-700 hover:to-amber-600 active:scale-[0.98] transition shadow-lg shadow-orange-600/30 text-sm tracking-wide">
+            Kirim Data Kehadiran
+          </button>
+        </form>
+      </div>
+
+      <!-- VIEW: DOWNLOAD SERTIFIKAT -->
+      <div id="view-download" class="view-section flex-col bg-white/95 backdrop-blur-xl p-8 rounded-[2rem] shadow-2xl border border-white/60 my-auto max-w-md mx-auto w-full">
+        <button onclick="navTo('home')" class="text-xs font-bold text-slate-400 mb-5 hover:text-slate-700 w-fit bg-slate-100 px-3 py-1.5 rounded-lg">← Kembali</button>
+        <h2 class="text-2xl font-extrabold text-slate-800 mb-6">Cari Sertifikat</h2>
+        <form id="form-download" onsubmit="submitDownload(event)" class="flex flex-col gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1.5">Nama Lengkap (Sesuai Absensi)</label>
+            <input type="text" id="d-nama" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 font-medium transition-shadow shadow-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1.5">Email</label>
+            <input type="email" id="d-email" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 font-medium transition-shadow shadow-sm">
+          </div>
+          <button type="submit" class="w-full mt-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black py-4 rounded-xl hover:from-emerald-700 hover:to-teal-700 active:scale-[0.98] transition shadow-lg shadow-emerald-600/30 text-sm tracking-wide">
+            Cari & Unduh Sertifikat
+          </button>
+        </form>
+      </div>
+
+      <!-- VIEW: ADMIN LOGIN -->
+      <div id="view-login" class="view-section flex-col bg-white/95 backdrop-blur-xl p-8 rounded-[2rem] shadow-2xl border border-white/60 my-auto max-w-sm mx-auto w-full">
+        <div class="flex justify-center mb-4">
+           <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-2xl shadow-inner border border-slate-200">🔐</div>
+        </div>
+        <h2 class="text-2xl font-extrabold text-slate-800 mb-6 text-center tracking-tight">Panel Admin</h2>
+        <form id="form-login" onsubmit="submitLogin(event)" class="flex flex-col gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1.5">Username</label>
+            <input type="text" id="l-user" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-slate-800 font-medium transition-shadow shadow-sm text-center">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1.5">Password</label>
+            <input type="password" id="l-pass" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-slate-800 font-medium transition-shadow shadow-sm text-center">
+          </div>
+          <button type="submit" class="w-full mt-4 bg-slate-800 text-white font-black py-4 rounded-xl hover:bg-slate-900 active:scale-[0.98] transition shadow-lg text-sm tracking-wide">
+            Masuk
+          </button>
+        </form>
+      </div>
+
+      <!-- VIEW: ADMIN DASHBOARD -->
+      <div id="view-admin" class="view-section flex-col bg-white/95 backdrop-blur-xl p-6 md:p-8 rounded-[2rem] shadow-2xl border border-white/60 my-auto max-w-5xl w-full mx-auto">
+        <button onclick="navTo('home')" class="text-xs text-blue-700 font-bold mb-6 hover:bg-blue-100 bg-blue-50 px-4 py-2 rounded-xl w-fit transition shadow-sm border border-blue-100">← Kembali ke Menu Utama</button>
+        <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 mb-8 tracking-tight border-b pb-4">Dashboard Administrator</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Setup Template Kiri -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <h3 class="text-base font-extrabold text-slate-800 mb-4 border-b pb-2">1. Konfigurasi Template</h3>
+            <div class="mb-4">
+              <label class="block text-xs font-bold text-slate-600 mb-1.5">Upload Template (JPG/PNG)</label>
+              <input type="file" id="template-upload" accept="image/png, image/jpeg" class="w-full border border-slate-300 p-2 rounded-xl text-xs font-medium bg-slate-50 cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" onchange="loadTemplate(event)">
+            </div>
+            <div class="mb-4 grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1.5">Ukuran Font (pt)</label>
+                <input type="number" id="font-size" value="36" class="w-full border border-slate-300 p-2.5 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 font-medium" onchange="previewCanvas()">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1.5">Alignment</label>
+                <select id="font-align" class="w-full border border-slate-300 p-2.5 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 font-medium cursor-pointer" onchange="previewCanvas()">
+                  <option value="center">Center (Tengah)</option>
+                  <option value="left">Left (Kiri)</option>
+                </select>
+              </div>
+            </div>
+            <div id="canvas-container" class="bg-slate-100 mb-3 rounded-xl overflow-hidden border border-slate-300 shadow-inner">
+              <canvas id="cert-canvas"></canvas>
+            </div>
+            <p class="text-[11px] font-mono bg-slate-800 text-green-400 p-2.5 rounded-xl border border-slate-700 shadow-inner" id="coord-info">Koordinat: X=0, Y=0</p>
+          </div>
+
+          <!-- Tabel Data Kanan -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
+            <h3 class="text-base font-extrabold text-slate-800 mb-4 border-b pb-2 flex justify-between items-center">
+              2. Data Kehadiran Peserta
+              <button onclick="loadDataPeserta()" class="text-xs bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg hover:bg-blue-100 font-bold border border-blue-100 transition shadow-sm">🔄 Refresh</button>
+            </h3>
+            <div class="overflow-x-auto border border-slate-200 rounded-xl flex-grow max-h-80 custom-scroll">
+              <table class="w-full text-xs text-left">
+                <thead class="bg-slate-100 text-slate-700 sticky top-0 border-b border-slate-200 shadow-sm">
+                  <tr>
+                    <th class="p-3 w-8"><input type="checkbox" id="check-all" class="rounded text-blue-600 focus:ring-blue-500" onchange="toggleCheckAll()"></th>
+                    <th class="p-3 font-bold">Nama</th>
+                    <th class="p-3 font-bold">Email</th>
+                  </tr>
+                </thead>
+                <tbody id="table-peserta" class="divide-y divide-slate-100">
+                  <tr><td colspan="3" class="p-6 text-center text-slate-400 font-medium">Memuat data...</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <button onclick="generateMassal()" class="w-full mt-5 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-black py-4 rounded-xl hover:from-orange-600 hover:to-amber-600 active:scale-[0.98] transition shadow-lg shadow-orange-500/30 text-sm tracking-wide">
+              🚀 Generate & Simpan Sertifikat
+            </button>
+          </div>
+        </div>
+        
+        <!-- Pengaturan Bawah -->
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-slate-200 pt-8">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <h3 class="text-sm font-extrabold text-slate-800 mb-4 border-b pb-2">⏱️ Pengaturan Waktu Absensi</h3>
+            <div class="mb-3">
+              <label class="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Mulai Buka</label>
+              <input type="datetime-local" id="t-start" class="w-full border border-slate-300 p-2.5 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500 bg-slate-50">
+            </div>
+            <div class="mb-4">
+              <label class="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Tutup Sesi</label>
+              <input type="datetime-local" id="t-end" class="w-full border border-slate-300 p-2.5 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500 bg-slate-50">
+            </div>
+            <button onclick="saveTimer()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl text-xs hover:bg-blue-700 active:scale-95 transition shadow-md shadow-blue-600/20">Simpan Waktu</button>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <h3 class="text-sm font-extrabold text-slate-800 mb-4 border-b pb-2">🔐 Ubah Password Admin</h3>
+            <div class="mb-3">
+              <label class="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Password Lama</label>
+              <input type="password" id="p-old" class="w-full border border-slate-300 p-2.5 rounded-xl text-sm font-medium focus:ring-2 focus:ring-red-500 bg-slate-50">
+            </div>
+            <div class="mb-4">
+              <label class="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Password Baru</label>
+              <input type="password" id="p-new" class="w-full border border-slate-300 p-2.5 rounded-xl text-sm font-medium focus:ring-2 focus:ring-red-500 bg-slate-50">
+            </div>
+            <button onclick="changePassword()" class="w-full bg-red-600 text-white font-bold py-3 rounded-xl text-xs hover:bg-red-700 active:scale-95 transition shadow-md shadow-red-600/20">Ganti Password</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div> <!-- END BUNGKUSAN KONTEN UTAMA -->
 
   <!-- FOOTER -->
-  <footer class="bg-slate-900 text-white text-center py-3 flex-none z-20">
-    <p class="text-xs font-semibold tracking-wide">&copy; <span id="year"></span> KPU Kabupaten Labuhanbatu Utara.</p>
-    <p class="text-[10px] text-slate-400">Version 1.0 - Beta Professional Edition.</p>
+  <footer class="relative z-10 bg-slate-900/90 backdrop-blur text-white text-center py-4 flex-none border-t border-white/10">
+    <p class="text-[13px] font-semibold tracking-wide">&copy; <span id="year"></span> KPU Kabupaten Labuhanbatu Utara.</p>
+    <p class="text-[10px] text-slate-400 mt-1 uppercase tracking-widest font-bold">Version 1.0 Beta - Professional Edition</p>
   </footer>
 
   <script>
@@ -266,14 +286,14 @@
         title: title,
         html: `
           <div class="flex flex-col items-center justify-center p-3">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/KPU_Logo.svg" class="w-16 h-16 object-contain animate-bounce my-2" alt="KPU Logo">
-            <p class="text-xs text-slate-500 font-medium">Mohon tunggu sebentar...</p>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/KPU_Logo.svg" class="w-16 h-16 object-contain animate-bounce my-2 drop-shadow-md" alt="KPU Logo">
+            <p class="text-xs text-slate-500 font-bold mt-2">Mohon tunggu sebentar...</p>
           </div>
         `,
         showConfirmButton: false,
         allowOutsideClick: false,
         allowEscapeKey: false,
-        customClass: { popup: 'rounded-2xl' }
+        customClass: { popup: 'rounded-3xl shadow-2xl' }
       });
     }
 
@@ -471,15 +491,15 @@
 
     let dbPeserta = [];
     async function loadDataPeserta() {
-      document.getElementById('table-peserta').innerHTML = '<tr><td colspan="3" class="p-4 text-center text-slate-400">Memuat...</td></tr>';
+      document.getElementById('table-peserta').innerHTML = '<tr><td colspan="3" class="p-4 text-center text-slate-400 font-medium">Memuat...</td></tr>';
       try {
         const res = await fetchAPI('getData');
         dbPeserta = res.data;
-        if (!dbPeserta || dbPeserta.length === 0) { document.getElementById('table-peserta').innerHTML = '<tr><td colspan="3" class="text-center p-4">Belum ada data.</td></tr>'; return; }
+        if (!dbPeserta || dbPeserta.length === 0) { document.getElementById('table-peserta').innerHTML = '<tr><td colspan="3" class="text-center p-4 font-medium text-slate-500">Belum ada data kehadiran.</td></tr>'; return; }
         let html = '';
-        dbPeserta.forEach((row, i) => { html += `<tr class="border-b"><td class="p-2.5"><input type="checkbox" class="chk-peserta" value="${i}"></td><td class="p-2.5 font-bold">${row[1]}</td><td class="p-2.5">${row[3]}</td></tr>`; });
+        dbPeserta.forEach((row, i) => { html += `<tr class="border-b border-slate-100 hover:bg-slate-50 transition"><td class="p-3"><input type="checkbox" class="chk-peserta rounded text-blue-600 focus:ring-blue-500" value="${i}"></td><td class="p-3 font-bold text-slate-700">${row[1]}</td><td class="p-3 text-slate-600">${row[3]}</td></tr>`; });
         document.getElementById('table-peserta').innerHTML = html;
-      } catch (e) { document.getElementById('table-peserta').innerHTML = `<tr><td colspan="3" class="text-center p-4 text-red-500">Error load data.</td></tr>`; }
+      } catch (e) { document.getElementById('table-peserta').innerHTML = `<tr><td colspan="3" class="text-center p-4 text-red-500 font-bold">Error memuat data.</td></tr>`; }
     }
 
     function toggleCheckAll() {
@@ -502,7 +522,7 @@
         let pIndex = checks[i].value, nama = dbPeserta[pIndex][1], email = dbPeserta[pIndex][3], fileName = `${nama}_${email}.pdf`;
         
         // Update teks progress
-        document.querySelector('.swal2-title').innerHTML = `Memproses ${i+1} dari ${checks.length}<br><small class="text-xs text-slate-400 font-normal">${nama}</small>`;
+        document.querySelector('.swal2-title').innerHTML = `Memproses ${i+1} dari ${checks.length}<br><small class="text-xs text-slate-500 font-bold mt-1 block">${nama}</small>`;
         
         const pdf = new window.jspdf.jsPDF({ orientation: orientation, unit: 'px', format: [canvas.width, canvas.height] });
         pdf.addImage(templateImg.src, 'JPEG', 0, 0, canvas.width, canvas.height);
@@ -514,7 +534,7 @@
           successCount++;
         } catch (err) { console.error("Gagal:", err); }
       }
-      Swal.fire('Selesai!', `Berhasil membuat dan menyimpan ${successCount} Sertifikat ke Drive.`, 'success');
+      Swal.fire({ title: 'Selesai!', text: `Berhasil membuat dan menyimpan ${successCount} Sertifikat ke Drive.`, icon: 'success', customClass: { popup: 'rounded-2xl' } });
     }
   </script>
 </body>
