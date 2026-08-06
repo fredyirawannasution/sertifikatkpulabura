@@ -30,22 +30,21 @@
 </head>
 
 <body class="font-sans h-[100dvh] w-screen overflow-hidden flex flex-col select-none relative bg-slate-900 bg-[url('https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center bg-no-repeat">
-  <!-- Overlay Backdrop -->
   <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[3px] z-0"></div>
 
   <!-- FLOATING WA SUPPORT BUTTON -->
   <a href="https://wa.me/6281263184787" target="_blank" class="fixed bottom-24 md:bottom-10 right-4 md:right-10 bg-green-500/90 backdrop-blur-sm text-white p-3.5 md:px-6 md:py-3.5 rounded-full shadow-[0_10px_40px_-10px_rgba(34,197,94,0.6)] hover:-translate-y-1 hover:bg-green-600 transition-all duration-300 z-50 flex items-center gap-2 border-2 border-white/20">
     <span class="text-2xl drop-shadow-md">💬</span>
-    <span class="hidden md:inline font-bold text-sm tracking-wide">Bantuan</span>
+    <span class="hidden md:inline font-bold text-sm tracking-wide">Bantuan Pusat</span>
   </a>
 
   <div class="relative z-10 flex flex-col h-full w-full">
-    <!-- HEADER (Kini Lebar Maksimal) -->
+    <!-- HEADER -->
     <header class="bg-white/90 backdrop-blur-md shadow-sm border-b border-white/20 flex-none">
       <div class="w-full max-w-[98%] lg:px-6 mx-auto px-4 py-3 flex justify-between items-center transition-all">
         <div class="flex items-center gap-3 md:gap-4 cursor-pointer hover:opacity-80 transition" onclick="navTo('home')">
           <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/KPU_Logo.svg" alt="Logo KPU" class="w-9 h-9 md:w-11 md:h-11 object-contain drop-shadow-sm">
-          <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-orange-600 tracking-tight drop-shadow-sm">KPU Labura</h1>
+          <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-orange-600 tracking-tight drop-shadow-sm">KPU Kabupaten Labuhanbatu Utara</h1>
         </div>
         <div>
           <button id="btn-login-nav" class="text-xs md:text-sm font-bold bg-white/50 text-slate-700 px-4 py-2 md:px-5 md:py-2.5 rounded-xl border border-slate-200/50 shadow-sm active:scale-95 transition hover:bg-white/80">Panel Admin</button>
@@ -63,14 +62,13 @@
           <h2 class="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-extrabold text-slate-800 tracking-tight drop-shadow-sm">Layanan Mandiri</h2>
           <p class="text-xs sm:text-sm md:text-lg lg:text-xl text-slate-600 mt-2 lg:mt-4 font-semibold">Sistem Kehadiran & Informasi KPU Kabupaten Labuhanbatu Utara</p>
           
-          <!-- Indikator Dashboard Kecil -->
-          <div class="mt-4 md:mt-6 inline-flex items-center gap-3 bg-white/60 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/40 shadow-sm">
-            <span class="relative flex h-3.5 w-3.5">
+          <div class="mt-5 md:mt-8 inline-flex items-center gap-3 md:gap-4 bg-white/70 backdrop-blur-md px-6 py-3 rounded-full border-2 border-emerald-100 shadow-lg">
+            <span class="relative flex h-4 w-4 md:h-5 md:w-5">
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500"></span>
+              <span class="relative inline-flex rounded-full h-4 w-4 md:h-5 md:w-5 bg-emerald-500"></span>
             </span>
-            <span class="text-xs md:text-sm font-extrabold text-slate-700 tracking-wide uppercase">
-              Total Pendaftar: <span id="stat-count" class="text-orange-600 mx-1 text-base md:text-lg">0</span> Peserta
+            <span class="text-sm md:text-base font-extrabold text-slate-700 tracking-wide uppercase">
+              Total Pendaftar: <span id="stat-count" class="text-orange-600 mx-1 text-lg md:text-2xl font-black">0</span> Peserta
             </span>
           </div>
         </div>
@@ -82,7 +80,7 @@
               <div class="w-14 h-14 lg:w-24 lg:h-24 bg-white/20 backdrop-blur-md rounded-2xl lg:rounded-3xl flex items-center justify-center text-2xl lg:text-5xl shrink-0 shadow-inner border border-white/20">📅</div>
               <div>
                 <h3 class="text-lg lg:text-3xl font-black text-white tracking-wide leading-tight">Agenda Meeting</h3>
-                <p class="text-blue-100 text-[11px] lg:text-sm mt-1 lg:mt-3 font-medium leading-relaxed">Jadwal pertemuan, tautan Zoom virtual, dan ID Passcode lengkap.</p>
+                <p class="text-blue-100 text-[11px] lg:text-sm mt-1 lg:mt-3 font-medium leading-relaxed">Lihat jadwal pertemuan.</p>
               </div>
             </div>
           </div>
@@ -93,7 +91,7 @@
               <div class="w-14 h-14 lg:w-24 lg:h-24 bg-white/20 backdrop-blur-md rounded-2xl lg:rounded-3xl flex items-center justify-center text-2xl lg:text-5xl shrink-0 shadow-inner border border-white/20">📝</div>
               <div>
                 <h3 class="text-lg lg:text-3xl font-black text-white tracking-wide leading-tight">Isi Daftar Hadir</h3>
-                <p class="text-orange-50 text-[11px] lg:text-sm mt-1 lg:mt-3 font-medium leading-relaxed">Registrasi kehadiran kegiatan dan raker secara mandiri & cepat.</p>
+                <p class="text-orange-50 text-[11px] lg:text-sm mt-1 lg:mt-3 font-medium leading-relaxed">Registrasi kehadiran kegiatan.</p>
               </div>
             </div>
           </div>
@@ -104,7 +102,7 @@
               <div class="w-14 h-14 lg:w-24 lg:h-24 bg-white/20 backdrop-blur-md rounded-2xl lg:rounded-3xl flex items-center justify-center text-2xl lg:text-5xl shrink-0 shadow-inner border border-white/20">📜</div>
               <div>
                 <h3 class="text-lg lg:text-3xl font-black text-white tracking-wide leading-tight">Unduh Sertifikat</h3>
-                <p class="text-emerald-50 text-[11px] lg:text-sm mt-1 lg:mt-3 font-medium leading-relaxed">Cari, periksa, dan unduh sertifikat elektronik partisipasi Anda.</p>
+                <p class="text-emerald-50 text-[11px] lg:text-sm mt-1 lg:mt-3 font-medium leading-relaxed">Cari dan unduh sertifikat partisipasi Anda.</p>
               </div>
             </div>
           </div>
@@ -144,7 +142,7 @@
           
           <div class="lg:col-span-2 mt-1 lg:mt-3 flex items-start md:items-center gap-3 bg-gradient-to-r from-orange-50 to-amber-50 p-4 lg:p-5 rounded-xl border border-orange-200/80 shadow-sm">
             <input type="checkbox" id="h-auto-email" class="w-5 h-5 lg:w-6 lg:h-6 mt-0.5 md:mt-0 text-orange-600 rounded border-slate-300 focus:ring-orange-500 cursor-pointer">
-            <label for="h-auto-email" class="text-xs lg:text-sm text-slate-700 font-bold leading-relaxed cursor-pointer">Kirim ke email saya secara otomatis bila file sertifikat telah siap diunduh.</label>
+            <label for="h-auto-email" class="text-xs lg:text-sm text-slate-700 font-bold leading-relaxed cursor-pointer">Kirim ke email saya otomatis, bila sertifikat telah di-Generate oleh Admin.</label>
           </div>
           
           <button type="submit" class="lg:col-span-2 w-full mt-2 lg:mt-4 bg-gradient-to-r from-orange-600 to-amber-500 text-white font-black py-4 rounded-xl hover:from-orange-700 hover:to-amber-600 active:scale-[0.99] transition shadow-xl shadow-orange-600/30 text-sm lg:text-lg tracking-wide">Kirim Data Kehadiran</button>
@@ -157,7 +155,7 @@
         <h2 class="text-2xl lg:text-4xl font-extrabold text-slate-800 mb-6 lg:mb-10 tracking-tight">Cari Sertifikat</h2>
         <form id="form-download" onsubmit="submitDownload(event)" class="flex flex-col gap-4 lg:gap-6">
           <div>
-            <label class="block text-xs lg:text-sm font-bold text-slate-600 mb-1.5 lg:mb-2">Nama Lengkap</label>
+            <label class="block text-xs lg:text-sm font-bold text-slate-600 mb-1.5 lg:mb-2">Nama Lengkap (Sesuai Absensi)</label>
             <input type="text" id="d-nama" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 lg:p-4 text-sm lg:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium transition-shadow shadow-sm">
           </div>
           <div>
@@ -253,12 +251,15 @@
               </table>
             </div>
             
+            <!-- TOMBOL AKSI TERPISAH (GENERATE MENTAH VS KIRIM EMAIL TTE) -->
             <div class="mt-4 lg:mt-6 flex flex-col gap-3">
-              <button onclick="generateMassal()" class="w-full bg-slate-800 text-white font-black py-3 lg:py-4 rounded-xl hover:bg-slate-900 active:scale-[0.99] transition shadow-lg text-sm lg:text-base tracking-wide">1. Buat PDF Mentah (Generate)</button>
-              <button onclick="triggerKirimEmail()" class="w-full bg-green-600 text-white font-black py-3 lg:py-4 rounded-xl hover:bg-green-700 active:scale-[0.99] transition shadow-lg shadow-green-600/30 text-sm lg:text-base tracking-wide flex items-center justify-center gap-2">
-                <span>📧</span> 2. Kirim Email Sertifikat TTE
+              <button onclick="generateMassal()" class="w-full bg-slate-800 text-white font-black py-3.5 lg:py-4 rounded-xl hover:bg-slate-900 active:scale-[0.99] transition shadow-lg text-sm lg:text-base tracking-wide border border-slate-700">1. Buat PDF Mentah (Simpan ke Drive)</button>
+              
+              <button onclick="triggerKirimEmail()" class="w-full bg-green-600 text-white font-black py-3.5 lg:py-4 rounded-xl hover:bg-green-700 active:scale-[0.99] transition shadow-lg shadow-green-600/30 text-sm lg:text-base tracking-wide flex items-center justify-center gap-2 border border-green-500">
+                <span>📧</span> 2. Kirim Email Peserta (Dari Folder TTE)
               </button>
-              <p class="text-[10px] text-slate-500 text-center leading-tight">Tekan tombol hijau hanya jika Anda telah mengunggah file yang sudah di-TTE ke dalam folder pencarian Drive.</p>
+              
+              <p class="text-[10px] md:text-xs text-slate-500 text-center leading-tight font-medium mt-1">Langkah: Generate &rarr; TTE Manual &rarr; Upload ke Folder Pencarian &rarr; Klik Kirim Email.</p>
             </div>
           </div>
         </div>
@@ -334,8 +335,8 @@
   </div>
 
   <footer class="relative z-10 bg-slate-900/90 backdrop-blur text-white text-center py-4 flex-none border-t border-white/10 pb-6 md:pb-4 transition-all">
-    <p class="text-[13px] md:text-sm font-semibold tracking-wide">&copy; <span id="year"></span> KPU Kabupaten Labuhanbatu Utara</p>
-    <p class="text-[10px] md:text-[11px] text-slate-400 mt-1 uppercase tracking-widest font-bold">v.0.0.9-Beta</p>
+    <p class="text-[13px] md:text-sm font-semibold tracking-wide">&copy; <span id="year"></span> KPU Kabupaten Labuhanbatu Utara.</p>
+    <p class="text-[10px] md:text-[11px] text-slate-400 mt-1 uppercase tracking-widest font-bold">Version 1.0 - Beta</p>
   </footer>
 
   <script>
@@ -344,7 +345,7 @@
     // ==========================================
     // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT
     // ==========================================
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbzMxLhUH3PQofqbc3y91gWa7zKrVA6n1-YU9VwKITFOFiIM9Y3SrgHsXe8ADPqamx6y/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyRkDOkMjlf-iR35XoIL4k8d1kZKl1vWtjHHG6AO9Ts4OYZffj-oF7aR5fyh6Q9JiVU/exec"; 
 
     window.addEventListener('DOMContentLoaded', (event) => {
         loadStats();
@@ -741,7 +742,7 @@
           if(res.success) successCount++; 
         } catch (err) {}
       }
-      Swal.fire({ title: 'Selesai!', text: `Berhasil mencetak ${successCount} PDF Mentah. Silakan TTE lalu gunakan fitur Kirim Email.`, icon: 'success', customClass: { popup: 'rounded-2xl' } });
+      Swal.fire({ title: 'Selesai!', text: `Berhasil mencetak ${successCount} PDF Mentah ke Folder Database. Silakan lakukan proses TTE secara manual.`, icon: 'success', customClass: { popup: 'rounded-2xl' } });
     }
 
     // LOGIKA BARU: TOMBOL KIRIM EMAIL MANUAL
