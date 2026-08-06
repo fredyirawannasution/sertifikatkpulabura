@@ -45,7 +45,7 @@
       <div class="w-full max-w-[98%] lg:px-6 mx-auto px-4 py-3 flex justify-between items-center transition-all">
         <div class="flex items-center gap-3 md:gap-4 cursor-pointer hover:opacity-80 transition" onclick="navTo('home')">
           <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/KPU_Logo.svg" alt="Logo KPU" class="w-9 h-9 md:w-11 md:h-11 object-contain drop-shadow-sm">
-          <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-orange-600 tracking-tight drop-shadow-sm">KPU Kabupaten Labuhanbatu Utara</h1>
+          <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-orange-600 tracking-tight drop-shadow-sm">KPU Labura</h1>
         </div>
         <div>
           <button id="btn-login-nav" class="text-xs md:text-sm font-bold bg-white/50 text-slate-700 px-4 py-2 md:px-5 md:py-2.5 rounded-xl border border-slate-200/50 shadow-sm active:scale-95 transition hover:bg-white/80">Panel Admin</button>
@@ -82,7 +82,7 @@
               <div class="w-14 h-14 lg:w-24 lg:h-24 bg-white/20 backdrop-blur-md rounded-2xl lg:rounded-3xl flex items-center justify-center text-2xl lg:text-5xl shrink-0 shadow-inner border border-white/20">📅</div>
               <div>
                 <h3 class="text-lg lg:text-3xl font-black text-white tracking-wide leading-tight">Agenda Meeting</h3>
-                <p class="text-blue-100 text-[11px] lg:text-sm mt-1 lg:mt-3 font-medium leading-relaxed">Jadwal pertemuan.</p>
+                <p class="text-blue-100 text-[11px] lg:text-sm mt-1 lg:mt-3 font-medium leading-relaxed">Jadwal pertemuan, tautan Zoom virtual, dan ID Passcode lengkap.</p>
               </div>
             </div>
           </div>
@@ -93,7 +93,7 @@
               <div class="w-14 h-14 lg:w-24 lg:h-24 bg-white/20 backdrop-blur-md rounded-2xl lg:rounded-3xl flex items-center justify-center text-2xl lg:text-5xl shrink-0 shadow-inner border border-white/20">📝</div>
               <div>
                 <h3 class="text-lg lg:text-3xl font-black text-white tracking-wide leading-tight">Isi Daftar Hadir</h3>
-                <p class="text-orange-50 text-[11px] lg:text-sm mt-1 lg:mt-3 font-medium leading-relaxed">Registrasi kehadiran kegiatan.</p>
+                <p class="text-orange-50 text-[11px] lg:text-sm mt-1 lg:mt-3 font-medium leading-relaxed">Registrasi kehadiran kegiatan dan raker secara mandiri & cepat.</p>
               </div>
             </div>
           </div>
@@ -104,7 +104,7 @@
               <div class="w-14 h-14 lg:w-24 lg:h-24 bg-white/20 backdrop-blur-md rounded-2xl lg:rounded-3xl flex items-center justify-center text-2xl lg:text-5xl shrink-0 shadow-inner border border-white/20">📜</div>
               <div>
                 <h3 class="text-lg lg:text-3xl font-black text-white tracking-wide leading-tight">Unduh Sertifikat</h3>
-                <p class="text-emerald-50 text-[11px] lg:text-sm mt-1 lg:mt-3 font-medium leading-relaxed">Cari dan unduh sertifikat elektronik partisipasi Anda.</p>
+                <p class="text-emerald-50 text-[11px] lg:text-sm mt-1 lg:mt-3 font-medium leading-relaxed">Cari, periksa, dan unduh sertifikat elektronik partisipasi Anda.</p>
               </div>
             </div>
           </div>
@@ -144,10 +144,10 @@
           
           <div class="lg:col-span-2 mt-1 lg:mt-3 flex items-start md:items-center gap-3 bg-gradient-to-r from-orange-50 to-amber-50 p-4 lg:p-5 rounded-xl border border-orange-200/80 shadow-sm">
             <input type="checkbox" id="h-auto-email" class="w-5 h-5 lg:w-6 lg:h-6 mt-0.5 md:mt-0 text-orange-600 rounded border-slate-300 focus:ring-orange-500 cursor-pointer">
-            <label for="h-auto-email" class="text-xs lg:text-sm text-slate-700 font-bold leading-relaxed cursor-pointer">Kirim ke email saya jika sertifikat sudah dicetak admin.</label>
+            <label for="h-auto-email" class="text-xs lg:text-sm text-slate-700 font-bold leading-relaxed cursor-pointer">Kirim ke email saya secara otomatis bila file sertifikat telah siap diunduh.</label>
           </div>
           
-          <button type="submit" class="lg:col-span-2 w-full mt-2 lg:mt-4 bg-gradient-to-r from-orange-600 to-amber-500 text-white font-black py-4 rounded-xl hover:from-orange-700 hover:to-amber-600 active:scale-[0.99] transition shadow-xl shadow-orange-600/30 text-sm lg:text-lg tracking-wide">Kirim Data</button>
+          <button type="submit" class="lg:col-span-2 w-full mt-2 lg:mt-4 bg-gradient-to-r from-orange-600 to-amber-500 text-white font-black py-4 rounded-xl hover:from-orange-700 hover:to-amber-600 active:scale-[0.99] transition shadow-xl shadow-orange-600/30 text-sm lg:text-lg tracking-wide">Kirim Data Kehadiran</button>
         </form>
       </div>
 
@@ -187,17 +187,18 @@
         </form>
       </div>
 
-      <!-- VIEW: ADMIN DASHBOARD (Penuh membentang di Desktop layaknya dashboard modern) -->
-      <div id="view-admin" class="view-section flex-col bg-white/95 backdrop-blur-xl p-5 md:p-8 rounded-[2rem] lg:rounded-[2.5rem] shadow-2xl border border-white/60 my-auto w-full lg:w-[98%] mx-auto transition-all">
+      <!-- VIEW: ADMIN DASHBOARD (DIBUAT FULL WIDTH MAKSIMAL DI DESKTOP) -->
+      <div id="view-admin" class="view-section flex-col bg-white/95 backdrop-blur-xl p-4 md:p-8 lg:p-10 rounded-[2rem] lg:rounded-[2.5rem] shadow-2xl border border-white/60 my-auto w-full max-w-[100%] mx-auto transition-all">
         <button onclick="navTo('home')" class="text-xs lg:text-sm text-blue-700 font-bold mb-6 lg:mb-8 hover:bg-blue-100 bg-blue-50 px-4 py-2 lg:px-6 lg:py-3 rounded-xl w-fit transition shadow-sm border border-blue-100">← Kembali ke Menu Utama</button>
         <h2 class="text-2xl lg:text-4xl font-extrabold text-slate-800 mb-6 lg:mb-10 tracking-tight border-b pb-4 lg:pb-6">Dashboard Administrator</h2>
         
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10">
+        <!-- GRID ASIMETRIS AGAR TEMPLATE LEBIH BESAR -->
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 lg:gap-8">
           
-          <!-- Setup Template Kiri -->
-          <div class="bg-white p-5 lg:p-8 rounded-[1.5rem] border border-slate-200 shadow-sm flex flex-col">
+          <!-- Setup Template Kiri (Lebih Lebar: 7 Kolom) -->
+          <div class="xl:col-span-7 bg-white p-5 lg:p-8 rounded-[1.5rem] border border-slate-200 shadow-sm flex flex-col">
             <h3 class="text-base lg:text-xl font-extrabold text-slate-800 mb-4 lg:mb-6 border-b pb-2 lg:pb-3">1. Konfigurasi Template & Nomor</h3>
-            <div class="mb-4 lg:mb-6">
+            <div class="mb-4 lg:mb-6 flex flex-col sm:flex-row gap-3">
               <input type="file" id="template-upload" accept="image/png, image/jpeg" class="w-full border border-slate-300 p-2 lg:p-3 rounded-xl text-xs lg:text-sm font-medium bg-slate-50 cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs lg:file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition" onchange="loadTemplate(event)">
             </div>
             
@@ -224,7 +225,6 @@
               </div>
             </div>
 
-            <!-- CONTAINER CANVAS DIUBAH KE BLOCK AGAR TIDAK COLLAPSE -->
             <div id="canvas-container" class="mb-3 rounded-xl border border-slate-300 shadow-inner">
               <canvas id="cert-canvas"></canvas>
             </div>
@@ -233,31 +233,37 @@
             <p class="text-[11px] lg:text-xs font-mono bg-slate-800 text-green-400 p-3 rounded-xl border border-slate-700 shadow-inner" id="coord-info">Koordinat: X=0, Y=0</p>
           </div>
 
-          <!-- Data Peserta Kanan -->
-          <div class="bg-white p-5 lg:p-8 rounded-[1.5rem] border border-slate-200 shadow-sm flex flex-col">
+          <!-- Data Peserta Kanan (5 Kolom) -->
+          <div class="xl:col-span-5 bg-white p-5 lg:p-8 rounded-[1.5rem] border border-slate-200 shadow-sm flex flex-col">
             <h3 class="text-base lg:text-xl font-extrabold text-slate-800 mb-4 lg:mb-6 border-b pb-2 lg:pb-3 flex justify-between items-center">
-              2. Data Kehadiran Peserta
-              <button onclick="loadDataPeserta()" class="text-[10px] lg:text-xs bg-blue-50 text-blue-700 px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg hover:bg-blue-100 font-bold border border-blue-100 shadow-sm transition active:scale-95">🔄 Refresh Data</button>
+              2. Data Peserta
+              <button onclick="loadDataPeserta()" class="text-[10px] lg:text-xs bg-blue-50 text-blue-700 px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg hover:bg-blue-100 font-bold border border-blue-100 shadow-sm transition active:scale-95">🔄 Refresh</button>
             </h3>
-            <!-- Di desktop tabel peserta lebih tinggi -->
-            <div class="overflow-x-auto border border-slate-200 rounded-xl flex-grow max-h-80 lg:max-h-[38rem] custom-scroll">
+            
+            <div class="overflow-x-auto border border-slate-200 rounded-xl flex-grow min-h-[300px] max-h-[500px] xl:max-h-[600px] custom-scroll">
               <table class="w-full text-xs lg:text-sm text-left">
                 <thead class="bg-slate-100 text-slate-700 sticky top-0 border-b border-slate-200 shadow-sm z-10">
                   <tr>
                     <th class="p-3 lg:p-4 w-8"><input type="checkbox" id="check-all" class="rounded text-blue-600 focus:ring-blue-500 lg:w-4 lg:h-4 cursor-pointer" onchange="toggleCheckAll()"></th>
-                    <th class="p-3 lg:p-4 font-bold">Nama</th>
+                    <th class="p-3 lg:p-4 font-bold">Nama & Status Email</th>
                     <th class="p-3 lg:p-4 font-bold">No. Urut</th>
-                    <th class="p-3 lg:p-4 font-bold">Email Otomatis</th>
                   </tr>
                 </thead>
-                <tbody id="table-peserta" class="divide-y divide-slate-100"><tr><td colspan="4" class="p-6 text-center text-slate-400">Memuat data...</td></tr></tbody>
+                <tbody id="table-peserta" class="divide-y divide-slate-100"><tr><td colspan="3" class="p-6 text-center text-slate-400">Memuat data...</td></tr></tbody>
               </table>
             </div>
-            <button onclick="generateMassal()" class="w-full mt-4 lg:mt-6 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-black py-4 lg:py-5 rounded-xl hover:from-orange-600 hover:to-amber-600 active:scale-[0.99] transition shadow-xl shadow-orange-500/30 text-sm lg:text-base tracking-wide">🚀 Generate & Kirim Sertifikat</button>
+            
+            <div class="mt-4 lg:mt-6 flex flex-col gap-3">
+              <button onclick="generateMassal()" class="w-full bg-slate-800 text-white font-black py-3 lg:py-4 rounded-xl hover:bg-slate-900 active:scale-[0.99] transition shadow-lg text-sm lg:text-base tracking-wide">1. Buat PDF Mentah (Generate)</button>
+              <button onclick="triggerKirimEmail()" class="w-full bg-green-600 text-white font-black py-3 lg:py-4 rounded-xl hover:bg-green-700 active:scale-[0.99] transition shadow-lg shadow-green-600/30 text-sm lg:text-base tracking-wide flex items-center justify-center gap-2">
+                <span>📧</span> 2. Kirim Email Sertifikat TTE
+              </button>
+              <p class="text-[10px] text-slate-500 text-center leading-tight">Tekan tombol hijau hanya jika Anda telah mengunggah file yang sudah di-TTE ke dalam folder pencarian Drive.</p>
+            </div>
           </div>
         </div>
 
-        <!-- MANAJEMEN AGENDA (Penuh membentang di Desktop) -->
+        <!-- MANAJEMEN AGENDA -->
         <div class="mt-6 lg:mt-10 bg-white p-5 lg:p-8 rounded-[1.5rem] border border-slate-200 shadow-sm">
           <h3 class="text-base lg:text-xl font-extrabold text-slate-800 mb-4 lg:mb-6 border-b pb-2 lg:pb-3">3. Manajemen Agenda Meeting</h3>
           <form id="form-agenda" onsubmit="submitAgendaAdmin(event)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 mb-6 lg:mb-8">
@@ -328,8 +334,8 @@
   </div>
 
   <footer class="relative z-10 bg-slate-900/90 backdrop-blur text-white text-center py-4 flex-none border-t border-white/10 pb-6 md:pb-4 transition-all">
-    <p class="text-[13px] md:text-sm font-semibold tracking-wide">&copy; <span id="year"></span> KPU Kabupaten Labuhanbatu Utara.</p>
-    <p class="text-[10px] md:text-[11px] text-slate-400 mt-1 uppercase tracking-widest font-bold">v.0.0.10-Beta</p>
+    <p class="text-[13px] md:text-sm font-semibold tracking-wide">&copy; <span id="year"></span> KPU Kabupaten Labuhanbatu Utara</p>
+    <p class="text-[10px] md:text-[11px] text-slate-400 mt-1 uppercase tracking-widest font-bold">v.0.0.9-Beta</p>
   </footer>
 
   <script>
@@ -338,9 +344,8 @@
     // ==========================================
     // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT
     // ==========================================
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbyr7Tn_5DxH048CXoVhj7PdmnFcvJ7GpbDQWolnCINRFNhBAP79mbGKsHPuqd3MzcOM/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbzMxLhUH3PQofqbc3y91gWa7zKrVA6n1-YU9VwKITFOFiIM9Y3SrgHsXe8ADPqamx6y/exec"; 
 
-    // Eksekusi otomatis saat halaman termuat untuk narik data jumlah peserta
     window.addEventListener('DOMContentLoaded', (event) => {
         loadStats();
     });
@@ -382,7 +387,7 @@
           return JSON.parse(text);
         } catch (e) {
           console.error("Non-JSON Response:", text);
-          return { success: false, message: "Koneksi server gagal. Pastikan URL GAS benar." };
+          return { success: false, message: "Koneksi server gagal. Pastikan URL GAS benar dan di-deploy Ulang." };
         }
       } catch (err) {
         return { success: false, message: "Koneksi internet bermasalah." };
@@ -405,6 +410,7 @@
         document.getElementById("btn-login-nav").textContent = "Panel Admin";
         document.getElementById("btn-logout-nav").classList.add("hidden");
       }
+      if(view === 'home') loadStats();
     }
 
     // --- AGENDA USER LOGIC ---
@@ -475,7 +481,7 @@
       try {
         const res = await fetchAPI('hadir', { data: data }, 'POST');
         if (res.success) { 
-          loadStats(); // Update angka pendaftar
+          loadStats();
           Swal.fire({ icon: 'success', title: 'Berhasil!', text: res.message, customClass: { popup: 'rounded-2xl' } }).then(() => { document.getElementById('form-hadir').reset(); navTo('home'); });
         } else { Swal.fire('Peringatan', res.message, 'warning'); }
       } catch (e) { Swal.fire('Error', 'Gagal menyimpan data', 'error'); }
@@ -575,7 +581,7 @@
     const ctx = canvas.getContext('2d');
     let templateImg = new Image();
     let isDragging = false;
-    let activeEl = 'nama'; // Default element
+    let activeEl = 'nama'; 
     let els = {
       nama: { x: 50, y: 50, w: 300, h: 50, size: 36, align: 'center', text: '[NAMA PESERTA]' },
       nomor: { x: 50, y: 150, w: 250, h: 30, size: 16, align: 'center', text: '[NOMOR SERTIFIKAT]' }
@@ -610,7 +616,7 @@
           els.nama.x = canvas.width * 0.1; els.nama.y = canvas.height * 0.4; els.nama.w = canvas.width * 0.8; els.nama.h = canvas.height * 0.1;
           els.nomor.x = canvas.width * 0.1; els.nomor.y = canvas.height * 0.2; els.nomor.w = canvas.width * 0.8; els.nomor.h = canvas.height * 0.05;
           
-          changeCanvasElement(); // Update Inputs & Draw
+          changeCanvasElement(); 
         };
         templateImg.onerror = function() {
           Swal.fire('Error', 'File tidak terbaca sebagai gambar valid.', 'error');
@@ -625,7 +631,6 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height); 
       ctx.drawImage(templateImg, 0, 0, canvas.width, canvas.height);
       
-      // Render semua elemen (Nama & Nomor)
       Object.keys(els).forEach(key => {
         let el = els[key];
         let isAct = (key === activeEl);
@@ -636,7 +641,7 @@
         ctx.strokeRect(el.x, el.y, el.w, el.h); 
         ctx.fillStyle = isAct ? "rgba(239, 68, 68, 0.15)" : "transparent"; 
         ctx.fillRect(el.x, el.y, el.w, el.h);
-        ctx.setLineDash([]); // Reset dashed lines
+        ctx.setLineDash([]); 
         
         ctx.font = `bold ${el.size}px Arial`; ctx.fillStyle = isAct ? "#000" : "#475569"; ctx.textBaseline = "middle";
         let textX = el.align === 'center' ? el.x + (el.w / 2) : (el.align === 'right' ? el.x + el.w : el.x);
@@ -671,23 +676,30 @@
 
     let dbPeserta = [];
     async function loadDataPeserta() {
-      document.getElementById('table-peserta').innerHTML = '<tr><td colspan="4" class="p-6 text-center text-slate-400 font-medium">Memuat...</td></tr>';
+      document.getElementById('table-peserta').innerHTML = '<tr><td colspan="3" class="p-6 text-center text-slate-400 font-medium">Memuat...</td></tr>';
       try {
         const res = await fetchAPI('getData'); 
         dbPeserta = res.data;
         if (!dbPeserta || !Array.isArray(dbPeserta) || dbPeserta.length === 0) { 
-          document.getElementById('table-peserta').innerHTML = '<tr><td colspan="4" class="text-center p-6 font-medium text-slate-500">Belum ada data kehadiran.</td></tr>'; 
+          document.getElementById('table-peserta').innerHTML = '<tr><td colspan="3" class="text-center p-6 font-medium text-slate-500">Belum ada data.</td></tr>'; 
           return; 
         }
         let html = '';
         dbPeserta.forEach((row, i) => { 
-          // row[5] adalah flag minta dikirim ke email
-          let isMintaEmail = row[5] === "Ya" ? "<span class='text-green-600 font-bold'>✓ Ya</span>" : "<span class='text-red-400'>-</span>";
+          let isMintaEmail = row[5] === "Ya" ? `<span class='text-green-600 font-bold'>Ya</span>` : `<span class='text-slate-400'>Tidak</span>`;
+          let statusKirim = row[6] === "Terkirim" ? `<span class='bg-green-100 text-green-700 px-2 py-0.5 rounded text-[10px] uppercase font-bold'>Terkirim</span>` : `<span class='bg-slate-100 text-slate-500 px-2 py-0.5 rounded text-[10px] uppercase'>Belum</span>`;
 
-          html += `<tr class="border-b border-slate-100 hover:bg-slate-50 transition"><td class="p-3 lg:p-4"><input type="checkbox" class="chk-peserta rounded text-blue-600 focus:ring-blue-500 lg:w-4 lg:h-4 cursor-pointer" value="${i}"></td><td class="p-3 lg:p-4 font-bold text-slate-700">${row[1]}</td><td class="p-3 lg:p-4 text-slate-600 font-mono">${i + 1}</td><td class="p-3 lg:p-4">${isMintaEmail}</td></tr>`; 
+          html += `<tr class="border-b border-slate-100 hover:bg-slate-50 transition">
+                    <td class="p-3 lg:p-4"><input type="checkbox" class="chk-peserta rounded text-blue-600 focus:ring-blue-500 lg:w-4 lg:h-4 cursor-pointer" value="${i}"></td>
+                    <td class="p-3 lg:p-4">
+                      <div class="font-bold text-slate-700">${row[1]}</div>
+                      <div class="text-[11px] text-slate-500 mt-1 flex items-center gap-2">Minta Email: ${isMintaEmail} &bull; ${statusKirim}</div>
+                    </td>
+                    <td class="p-3 lg:p-4 text-slate-600 font-mono text-center">${i + 1}</td>
+                   </tr>`; 
         });
         document.getElementById('table-peserta').innerHTML = html;
-      } catch (e) { document.getElementById('table-peserta').innerHTML = `<tr><td colspan="4" class="text-center p-6 text-red-500 font-bold">Error memuat data/Koneksi gagal.</td></tr>`; }
+      } catch (e) { document.getElementById('table-peserta').innerHTML = `<tr><td colspan="3" class="text-center p-6 text-red-500 font-bold">Error memuat data.</td></tr>`; }
     }
     
     function toggleCheckAll() { const isChecked = document.getElementById('check-all').checked; document.querySelectorAll('.chk-peserta').forEach(el => el.checked = isChecked); }
@@ -704,7 +716,7 @@
       let successCount = 0;
       
       for (let i = 0; i < checks.length; i++) {
-        let pIndex = checks[i].value, nama = dbPeserta[pIndex][1], email = dbPeserta[pIndex][3], mintaEmail = (dbPeserta[pIndex][5] === "Ya"), fileName = `${nama}_${email}.pdf`;
+        let pIndex = checks[i].value, nama = dbPeserta[pIndex][1], email = dbPeserta[pIndex][3], fileName = `${nama}_${email}.pdf`;
         let nomorSertifikat = (parseInt(pIndex) + 1) + kodeFormat;
 
         document.querySelector('.swal2-title').innerHTML = `Memproses ${i+1} dari ${checks.length}<br><small class="text-xs md:text-sm text-slate-500 font-bold mt-1 block">${nama}</small><small class="text-[10px] md:text-xs font-mono text-blue-500 block mt-0.5">${nomorSertifikat}</small>`;
@@ -725,13 +737,35 @@
         pdf.text(nomorSertifikat, nox, noy, { align: els.nomor.align, baseline: 'middle' });
         
         try { 
-          // Payload ditambahkan argument mintaEmail agar backend tahu kapan kirim pesan via GmailApp
-          const res = await fetchAPI('simpanPdf', { base64Data: pdf.output('datauristring'), filename: fileName, nama: nama, email: email, kirimEmail: mintaEmail }, 'POST'); 
+          const res = await fetchAPI('simpanPdf', { base64Data: pdf.output('datauristring'), filename: fileName }, 'POST'); 
           if(res.success) successCount++; 
         } catch (err) {}
       }
-      Swal.fire({ title: 'Selesai!', text: `Berhasil mencetak ${successCount} Sertifikat.`, icon: 'success', customClass: { popup: 'rounded-2xl' } });
+      Swal.fire({ title: 'Selesai!', text: `Berhasil mencetak ${successCount} PDF Mentah. Silakan TTE lalu gunakan fitur Kirim Email.`, icon: 'success', customClass: { popup: 'rounded-2xl' } });
     }
+
+    // LOGIKA BARU: TOMBOL KIRIM EMAIL MANUAL
+    async function triggerKirimEmail() {
+      Swal.fire({
+        title: 'Konfirmasi',
+        html: '<p class="text-sm">Sistem akan memindai folder TTE dan mengirimkan email otomatis ke peserta yang meminta.</p><p class="text-xs text-red-500 font-bold mt-2">Pastikan Anda SUDAH mengunggah file PDF yang di-TTE ke folder pencarian.</p>',
+        icon: 'warning', showCancelButton: true, confirmButtonText: 'Ya, Kirim Email', confirmButtonColor: '#16a34a', cancelButtonText: 'Batal'
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          showLoading('Mengirim Email Massal...');
+          try {
+            const res = await fetchAPI('kirimEmailTTE', {}, 'POST');
+            if(res.success) {
+              Swal.fire({ icon: 'success', title: 'Selesai!', text: res.message, customClass: { popup: 'rounded-2xl' } });
+              loadDataPeserta(); // Refresh tabel agar status berubah
+            } else {
+              Swal.fire('Gagal', res.message, 'error');
+            }
+          } catch(e) { Swal.fire('Error', 'Terjadi kesalahan sistem/koneksi.', 'error'); }
+        }
+      });
+    }
+
   </script>
 </body>
 </html>
