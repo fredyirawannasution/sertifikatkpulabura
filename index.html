@@ -22,8 +22,11 @@
     .view-section { display: none; }
     .view-section.active { display: flex; animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    #canvas-container { position: relative; border: 2px dashed #cbd5e1; display: inline-block; cursor: crosshair; max-width: 100%; overflow: auto; background-color: #f8fafc; }
-    canvas { max-width: 100%; height: auto; }
+    
+    /* PERBAIKAN: Canvas dipaksa menggunakan block system agar tidak collapse */
+    #canvas-container { position: relative; border: 2px dashed #cbd5e1; display: block; width: 100%; text-align: center; cursor: crosshair; overflow: hidden; background-color: #f8fafc; }
+    canvas { max-width: 100%; height: auto; display: inline-block; margin: 0 auto; }
+    
     .custom-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
     .custom-scroll::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.6); border-radius: 10px; }
     .custom-scroll::-webkit-scrollbar-track { background: transparent; }
@@ -37,11 +40,11 @@
   <!-- FLOATING WA SUPPORT BUTTON -->
   <a href="https://wa.me/6281263184787" target="_blank" class="fixed bottom-24 md:bottom-10 right-4 md:right-10 bg-green-500/90 backdrop-blur-sm text-white p-3.5 md:px-6 md:py-3.5 rounded-full shadow-[0_10px_40px_-10px_rgba(34,197,94,0.6)] hover:-translate-y-1 hover:bg-green-600 transition-all duration-300 z-50 flex items-center gap-2 border-2 border-white/20">
     <span class="text-2xl drop-shadow-md">💬</span>
-    <span class="hidden md:inline font-bold text-sm tracking-wide">Bantuan</span>
+    <span class="hidden md:inline font-bold text-sm tracking-wide">Bantuan Pusat</span>
   </a>
 
   <div class="relative z-10 flex flex-col h-full w-full">
-    <!-- HEADER (Lebih lebar di Desktop) -->
+    <!-- HEADER -->
     <header class="bg-white/90 backdrop-blur-md shadow-sm border-b border-white/20 flex-none">
       <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center transition-all">
         <div class="flex items-center gap-3 md:gap-4 cursor-pointer hover:opacity-80 transition" onclick="navTo('home')">
@@ -57,18 +60,14 @@
 
     <main class="flex-grow max-w-7xl mx-auto w-full px-4 py-6 overflow-y-auto custom-scroll flex flex-col pb-28 md:pb-32 transition-all">
       
-      <!-- VIEW: HOME (TATA LETAK 3 KOLOM UNTUK DESKTOP) -->
+      <!-- VIEW: HOME -->
       <div id="view-home" class="view-section active flex-col justify-center my-auto py-2 w-full">
-        <!-- Judul Besar -->
         <div class="text-center mb-6 md:mb-10 lg:mb-14 bg-white/80 backdrop-blur-xl p-6 md:p-10 lg:p-12 rounded-[2rem] shadow-2xl border border-white/50 max-w-md md:max-w-4xl mx-auto w-full transition-all">
           <h2 class="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-extrabold text-slate-800 tracking-tight drop-shadow-sm">Layanan Mandiri</h2>
           <p class="text-xs sm:text-sm md:text-lg lg:text-xl text-slate-600 mt-2 lg:mt-4 font-semibold">Sistem Kehadiran & Informasi KPU Kabupaten Labuhanbatu Utara</p>
         </div>
 
-        <!-- Grid Cards (1 kolom di HP, 3 kolom membentang di Desktop) -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-8 w-full max-w-md lg:max-w-6xl mx-auto transition-all">
-          
-          <!-- Card: Agenda -->
           <div onclick="navToAgenda()" class="group relative bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-5 lg:p-10 rounded-[1.5rem] lg:rounded-[2.5rem] shadow-xl hover:shadow-2xl hover:shadow-blue-600/40 shadow-blue-600/20 active:scale-[0.98] lg:hover:-translate-y-3 transition-all cursor-pointer overflow-hidden border border-blue-400/50 flex flex-col justify-between h-full">
             <div class="absolute -right-4 -bottom-4 lg:-right-8 lg:-bottom-8 text-white/10 text-8xl lg:text-[10rem] font-black select-none pointer-events-none group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500">📅</div>
             <div class="flex flex-row lg:flex-col items-center lg:items-start gap-4 lg:gap-8 relative z-10">
@@ -80,7 +79,6 @@
             </div>
           </div>
 
-          <!-- Card: Isi Daftar Hadir -->
           <div onclick="checkAbsensiStatus()" class="group relative bg-gradient-to-br from-orange-500 to-amber-600 text-white p-5 lg:p-10 rounded-[1.5rem] lg:rounded-[2.5rem] shadow-xl hover:shadow-2xl hover:shadow-orange-500/40 shadow-orange-500/20 active:scale-[0.98] lg:hover:-translate-y-3 transition-all cursor-pointer overflow-hidden border border-orange-400/50 flex flex-col justify-between h-full">
             <div class="absolute -right-4 -bottom-4 lg:-right-8 lg:-bottom-8 text-white/10 text-8xl lg:text-[10rem] font-black select-none pointer-events-none group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">📝</div>
             <div class="flex flex-row lg:flex-col items-center lg:items-start gap-4 lg:gap-8 relative z-10">
@@ -92,7 +90,6 @@
             </div>
           </div>
 
-          <!-- Card: Unduh Sertifikat -->
           <div onclick="navTo('download')" class="group relative bg-gradient-to-br from-emerald-600 to-teal-700 text-white p-5 lg:p-10 rounded-[1.5rem] lg:rounded-[2.5rem] shadow-xl hover:shadow-2xl hover:shadow-emerald-600/40 shadow-emerald-600/20 active:scale-[0.98] lg:hover:-translate-y-3 transition-all cursor-pointer overflow-hidden border border-emerald-500/50 flex flex-col justify-between h-full">
             <div class="absolute -right-4 -bottom-4 lg:-right-8 lg:-bottom-8 text-white/10 text-8xl lg:text-[10rem] font-black select-none pointer-events-none group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500">📜</div>
             <div class="flex flex-row lg:flex-col items-center lg:items-start gap-4 lg:gap-8 relative z-10">
@@ -103,28 +100,25 @@
               </div>
             </div>
           </div>
-          
         </div>
       </div>
 
-      <!-- VIEW: AGENDA USER (Desktop Lebih Lebar) -->
+      <!-- VIEW: AGENDA USER -->
       <div id="view-agenda" class="view-section flex-col bg-white/95 backdrop-blur-xl p-6 lg:p-12 rounded-[2rem] lg:rounded-[2.5rem] shadow-2xl border border-white/60 my-auto max-w-2xl lg:max-w-5xl mx-auto w-full transition-all">
         <button onclick="navTo('home')" class="text-xs md:text-sm font-bold text-slate-500 mb-5 lg:mb-8 hover:text-slate-800 w-fit bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-xl transition">← Kembali ke Utama</button>
         <h2 class="text-2xl lg:text-4xl font-extrabold text-slate-800 mb-2 lg:mb-4 tracking-tight">Agenda Meeting</h2>
         <p class="text-xs lg:text-base text-slate-500 mb-6 lg:mb-10 font-medium">Jadwal pertemuan dan sesi virtual KPU Labura.</p>
-        <div id="list-agenda-user" class="flex flex-col gap-4 lg:gap-6">
-          <!-- Agenda cards here -->
-        </div>
+        <div id="list-agenda-user" class="flex flex-col gap-4 lg:gap-6"></div>
       </div>
 
-      <!-- VIEW: DAFTAR HADIR (Di Laptop jadi 2 Kolom) -->
+      <!-- VIEW: DAFTAR HADIR -->
       <div id="view-hadir" class="view-section flex-col bg-white/95 backdrop-blur-xl p-6 lg:p-12 rounded-[2rem] lg:rounded-[2.5rem] shadow-2xl border border-white/60 my-auto max-w-md lg:max-w-4xl mx-auto w-full transition-all">
         <button onclick="navTo('home')" class="text-xs md:text-sm font-bold text-slate-500 mb-5 lg:mb-8 hover:text-slate-800 w-fit bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-xl transition">← Kembali ke Utama</button>
         <h2 class="text-2xl lg:text-4xl font-extrabold text-slate-800 mb-6 lg:mb-10 tracking-tight">Form Daftar Hadir</h2>
         
         <form id="form-hadir" onsubmit="submitHadir(event)" class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
           <div>
-            <label class="block text-xs lg:text-sm font-bold text-slate-600 mb-1.5 lg:mb-2">Nama Lengkap (Boleh Pakai Gelar)</label>
+            <label class="block text-xs lg:text-sm font-bold text-slate-600 mb-1.5 lg:mb-2">Nama Lengkap & Gelar</label>
             <input type="text" id="h-nama" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 lg:p-4 text-sm lg:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-shadow shadow-sm">
           </div>
           <div>
@@ -155,7 +149,7 @@
         <h2 class="text-2xl lg:text-4xl font-extrabold text-slate-800 mb-6 lg:mb-10 tracking-tight">Cari Sertifikat</h2>
         <form id="form-download" onsubmit="submitDownload(event)" class="flex flex-col gap-4 lg:gap-6">
           <div>
-            <label class="block text-xs lg:text-sm font-bold text-slate-600 mb-1.5 lg:mb-2">Nama Lengkap</label>
+            <label class="block text-xs lg:text-sm font-bold text-slate-600 mb-1.5 lg:mb-2">Nama Lengkap (Sesuai Absensi)</label>
             <input type="text" id="d-nama" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 lg:p-4 text-sm lg:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium transition-shadow shadow-sm">
           </div>
           <div>
@@ -185,18 +179,18 @@
         </form>
       </div>
 
-      <!-- VIEW: ADMIN DASHBOARD (Penuh & Leluasa di Laptop) -->
+      <!-- VIEW: ADMIN DASHBOARD -->
       <div id="view-admin" class="view-section flex-col bg-white/95 backdrop-blur-xl p-5 lg:p-12 rounded-[2rem] lg:rounded-[2.5rem] shadow-2xl border border-white/60 my-auto max-w-5xl lg:max-w-[90rem] w-full mx-auto transition-all">
         <button onclick="navTo('home')" class="text-xs lg:text-sm text-blue-700 font-bold mb-6 lg:mb-8 hover:bg-blue-100 bg-blue-50 px-4 py-2 lg:px-6 lg:py-3 rounded-xl w-fit transition shadow-sm border border-blue-100">← Kembali ke Menu Utama</button>
         <h2 class="text-2xl lg:text-4xl font-extrabold text-slate-800 mb-6 lg:mb-10 tracking-tight border-b pb-4 lg:pb-6">Dashboard Administrator</h2>
         
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10">
           
-          <!-- Setup Template Kiri -->
+          <!-- Setup Template -->
           <div class="bg-white p-5 lg:p-8 rounded-[1.5rem] border border-slate-200 shadow-sm flex flex-col">
             <h3 class="text-base lg:text-xl font-extrabold text-slate-800 mb-4 lg:mb-6 border-b pb-2 lg:pb-3">1. Konfigurasi Template & Nomor</h3>
             <div class="mb-4 lg:mb-6">
-              <input type="file" id="template-upload" accept="image/png, image/jpeg" class="w-full border border-slate-300 p-2 lg:p-3 rounded-xl text-xs lg:text-sm font-medium bg-slate-50 cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs lg:file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition">
+              <input type="file" id="template-upload" accept="image/png, image/jpeg" class="w-full border border-slate-300 p-2 lg:p-3 rounded-xl text-xs lg:text-sm font-medium bg-slate-50 cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs lg:file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition" onchange="loadTemplate(event)">
             </div>
             
             <div class="mb-4 lg:mb-6 bg-blue-50/50 p-4 lg:p-6 rounded-xl border border-blue-100">
@@ -222,12 +216,16 @@
               </div>
             </div>
 
-            <div id="canvas-container" class="bg-slate-100 mb-3 rounded-xl overflow-hidden border border-slate-300 shadow-inner flex justify-center"><canvas id="cert-canvas"></canvas></div>
+            <!-- CONTAINER CANVAS DIUBAH KE BLOCK AGAR TIDAK COLLAPSE -->
+            <div id="canvas-container" class="mb-3 rounded-xl border border-slate-300 shadow-inner">
+              <canvas id="cert-canvas"></canvas>
+            </div>
+            
             <p class="text-[10px] lg:text-xs text-slate-500 mb-2 italic">Tarik garis/kotak merah di atas untuk memindahkan elemen.</p>
             <p class="text-[11px] lg:text-xs font-mono bg-slate-800 text-green-400 p-3 rounded-xl border border-slate-700 shadow-inner" id="coord-info">Koordinat: X=0, Y=0</p>
           </div>
 
-          <!-- Data Peserta Kanan -->
+          <!-- Data Peserta -->
           <div class="bg-white p-5 lg:p-8 rounded-[1.5rem] border border-slate-200 shadow-sm flex flex-col">
             <h3 class="text-base lg:text-xl font-extrabold text-slate-800 mb-4 lg:mb-6 border-b pb-2 lg:pb-3 flex justify-between items-center">
               2. Data Kehadiran Peserta
@@ -249,7 +247,7 @@
           </div>
         </div>
 
-        <!-- MANAJEMEN AGENDA (Penuh membentang di Desktop) -->
+        <!-- MANAJEMEN AGENDA -->
         <div class="mt-6 lg:mt-10 bg-white p-5 lg:p-8 rounded-[1.5rem] border border-slate-200 shadow-sm">
           <h3 class="text-base lg:text-xl font-extrabold text-slate-800 mb-4 lg:mb-6 border-b pb-2 lg:pb-3">3. Manajemen Agenda Meeting</h3>
           <form id="form-agenda" onsubmit="submitAgendaAdmin(event)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 mb-6 lg:mb-8">
@@ -319,7 +317,6 @@
     </main>
   </div>
 
-  <!-- FOOTER -->
   <footer class="relative z-10 bg-slate-900/90 backdrop-blur text-white text-center py-4 flex-none border-t border-white/10 pb-6 md:pb-4 transition-all">
     <p class="text-[13px] md:text-sm font-semibold tracking-wide">&copy; <span id="year"></span> KPU Kabupaten Labuhanbatu Utara.</p>
     <p class="text-[10px] md:text-[11px] text-slate-400 mt-1 uppercase tracking-widest font-bold">v.0.0.9-Beta</p>
@@ -331,7 +328,7 @@
     // ==========================================
     // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT
     // ==========================================
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbwxtFC3VHa1WMiycxFmbAP1sZGOvUAiSe0Gj2Oph1yg0ur6Vk6cOua4eCVBT0KhsQuI/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxpvzhvANmXQvaHVH2NbuUk3D467ney8SB4PGVcJHtgucxr-pr86kT3a2kag_uL2UHR/exec"; 
 
     function showLoading(title = 'Memproses...') {
       Swal.fire({
@@ -550,7 +547,10 @@
     }
 
     // --- CANVAS TEMPLATE LOGIC MULTI-ELEMENT ---
-    let templateImg = new Image(), canvas = document.getElementById('cert-canvas'), ctx = canvas.getContext('2d'), isDragging = false;
+    const canvas = document.getElementById('cert-canvas');
+    const ctx = canvas.getContext('2d');
+    let templateImg = new Image();
+    let isDragging = false;
     let activeEl = 'nama'; // Default element
     let els = {
       nama: { x: 50, y: 50, w: 300, h: 50, size: 36, align: 'center', text: '[NAMA PESERTA]' },
@@ -559,28 +559,40 @@
 
     function changeCanvasElement() {
       activeEl = document.getElementById('el-select').value;
+      if(!els[activeEl]) return;
       document.getElementById('font-size').value = els[activeEl].size;
       document.getElementById('font-align').value = els[activeEl].align;
       previewCanvas();
     }
 
     function updateElementStyle() {
+      if(!els[activeEl]) return;
       els[activeEl].size = parseInt(document.getElementById('font-size').value) || 20;
       els[activeEl].align = document.getElementById('font-align').value;
       previewCanvas();
     }
 
     function loadTemplate(e) {
-      const file = e.target.files[0]; if (!file) return; const reader = new FileReader();
+      const file = e.target.files[0]; 
+      if (!file) return; 
+      
+      const reader = new FileReader();
       reader.onload = function(event) {
         templateImg.onload = function() { 
-          canvas.width = templateImg.width; canvas.height = templateImg.height; canvas.style.width = '100%'; 
+          canvas.width = templateImg.width; 
+          canvas.height = templateImg.height; 
+          canvas.style.width = '100%'; 
+          
           els.nama.x = canvas.width * 0.1; els.nama.y = canvas.height * 0.4; els.nama.w = canvas.width * 0.8; els.nama.h = canvas.height * 0.1;
           els.nomor.x = canvas.width * 0.1; els.nomor.y = canvas.height * 0.2; els.nomor.w = canvas.width * 0.8; els.nomor.h = canvas.height * 0.05;
-          changeCanvasElement(); // Initialize inputs
-        }
+          
+          changeCanvasElement(); // Update Inputs & Draw
+        };
+        templateImg.onerror = function() {
+          Swal.fire('Error', 'File tidak terbaca sebagai gambar valid.', 'error');
+        };
         templateImg.src = event.target.result;
-      }
+      };
       reader.readAsDataURL(file);
     }
 
@@ -589,7 +601,7 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height); 
       ctx.drawImage(templateImg, 0, 0, canvas.width, canvas.height);
       
-      // Render semua elemen
+      // Render semua elemen (Nama & Nomor)
       Object.keys(els).forEach(key => {
         let el = els[key];
         let isAct = (key === activeEl);
@@ -600,7 +612,7 @@
         ctx.strokeRect(el.x, el.y, el.w, el.h); 
         ctx.fillStyle = isAct ? "rgba(239, 68, 68, 0.15)" : "transparent"; 
         ctx.fillRect(el.x, el.y, el.w, el.h);
-        ctx.setLineDash([]); // Reset
+        ctx.setLineDash([]); // Reset dashed lines
         
         ctx.font = `bold ${el.size}px Arial`; ctx.fillStyle = isAct ? "#000" : "#475569"; ctx.textBaseline = "middle";
         let textX = el.align === 'center' ? el.x + (el.w / 2) : (el.align === 'right' ? el.x + el.w : el.x);
@@ -616,10 +628,16 @@
     function handleStart(e) { isDragging = true; updateRect(e); } 
     function handleMove(e) { if (isDragging) { updateRect(e); e.preventDefault(); } } 
     function handleEnd() { isDragging = false; }
-    canvas.addEventListener('mousedown', handleStart); canvas.addEventListener('mousemove', handleMove); canvas.addEventListener('mouseup', handleEnd);
-    canvas.addEventListener('touchstart', handleStart, {passive: false}); canvas.addEventListener('touchmove', handleMove, {passive: false}); canvas.addEventListener('touchend', handleEnd);
+    
+    canvas.addEventListener('mousedown', handleStart); 
+    canvas.addEventListener('mousemove', handleMove); 
+    canvas.addEventListener('mouseup', handleEnd);
+    canvas.addEventListener('touchstart', handleStart, {passive: false}); 
+    canvas.addEventListener('touchmove', handleMove, {passive: false}); 
+    canvas.addEventListener('touchend', handleEnd);
     
     function updateRect(e) {
+      if(!templateImg.src) return;
       const cssRect = canvas.getBoundingClientRect(), clientX = e.touches ? e.touches[0].clientX : e.clientX, clientY = e.touches ? e.touches[0].clientY : e.clientY;
       const scaleX = canvas.width / cssRect.width, scaleY = canvas.height / cssRect.height;
       els[activeEl].x = (clientX - cssRect.left) * scaleX; 
@@ -660,7 +678,6 @@
       
       for (let i = 0; i < checks.length; i++) {
         let pIndex = checks[i].value, nama = dbPeserta[pIndex][1], email = dbPeserta[pIndex][3], fileName = `${nama}_${email}.pdf`;
-        
         let nomorSertifikat = (parseInt(pIndex) + 1) + kodeFormat;
 
         document.querySelector('.swal2-title').innerHTML = `Memproses ${i+1} dari ${checks.length}<br><small class="text-xs md:text-sm text-slate-500 font-bold mt-1 block">${nama}</small><small class="text-[10px] md:text-xs font-mono text-blue-500 block mt-0.5">${nomorSertifikat}</small>`;
