@@ -12,11 +12,15 @@
   <link rel="dns-prefetch" href="https://images.unsplash.com">
   <link rel="preconnect" href="https://images.unsplash.com">
 
+  <!-- IMPORT GOOGLE FONTS -->
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- Menggunakan PDF-Lib untuk mengedit PDF dengan mempertahankan fitur Searchable Text -->
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
   <script src="https://unpkg.com/@pdf-lib/fontkit@0.0.4/dist/fontkit.umd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <!-- Menggunakan Mammoth.js untuk membaca file Word sebagai opsi darurat -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
   
@@ -31,7 +35,6 @@
     .custom-scroll::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.6); border-radius: 10px; }
     .custom-scroll::-webkit-scrollbar-track { background: transparent; }
     
-    /* Loading overlay for PDF rendering */
     #pdf-loading { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.8); display: none; align-items: center; justify-content: center; z-index: 10; font-weight: bold; color: #475569; }
   </style>
 </head>
@@ -64,7 +67,6 @@
       
       <!-- VIEW: HOME -->
       <div id="view-home" class="view-section active flex-col justify-center my-auto py-2 w-full">
-        <!-- Judul Besar & DASHBOARD INDIKATOR -->
         <div class="text-center mb-6 md:mb-10 lg:mb-14 bg-white/80 backdrop-blur-xl p-6 md:p-10 lg:p-12 rounded-[2rem] shadow-2xl border border-white/50 max-w-md md:max-w-4xl mx-auto w-full transition-all">
           <h2 class="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-extrabold text-slate-800 tracking-tight drop-shadow-sm">Layanan Mandiri</h2>
           <p class="text-xs sm:text-sm md:text-lg lg:text-xl text-slate-600 mt-2 lg:mt-4 font-semibold">Sistem Kehadiran & Informasi KPU Kabupaten Labuhanbatu Utara</p>
@@ -135,7 +137,7 @@
             <input type="text" id="h-nama" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 lg:p-4 text-sm lg:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-shadow shadow-sm">
           </div>
           <div>
-            <label class="block text-xs lg:text-sm font-bold text-slate-600 mb-1.5 lg:mb-2">Instansi / Organisasi</label>
+            <label class="block text-xs lg:text-sm font-bold text-slate-600 mb-1.5 lg:mb-2">Instansi / Satker / Organisasi</label>
             <input type="text" id="h-instansi" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 lg:p-4 text-sm lg:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-shadow shadow-sm">
           </div>
           <div>
@@ -149,7 +151,7 @@
           
           <div class="lg:col-span-2 mt-1 lg:mt-3 flex items-start md:items-center gap-3 bg-gradient-to-r from-orange-50 to-amber-50 p-4 lg:p-5 rounded-xl border border-orange-200/80 shadow-sm">
             <input type="checkbox" id="h-auto-email" class="w-5 h-5 lg:w-6 lg:h-6 mt-0.5 md:mt-0 text-orange-600 rounded border-slate-300 focus:ring-orange-500 cursor-pointer">
-            <label for="h-auto-email" class="text-xs lg:text-sm text-slate-700 font-bold leading-relaxed cursor-pointer">Kirim ke email saya otomatis, bila sertifikat telah di-Generate oleh Admin.</label>
+            <label for="h-auto-email" class="text-xs lg:text-sm text-slate-700 font-bold leading-relaxed cursor-pointer">Kirim ke email saya, bila sertifikat telah tersedia.</label>
           </div>
           
           <button type="submit" class="lg:col-span-2 w-full mt-2 lg:mt-4 bg-gradient-to-r from-orange-600 to-amber-500 text-white font-black py-4 rounded-xl hover:from-orange-700 hover:to-amber-600 active:scale-[0.99] transition shadow-xl shadow-orange-600/30 text-sm lg:text-lg tracking-wide">Kirim Data Kehadiran</button>
@@ -197,11 +199,12 @@
         <button onclick="navTo('home')" class="text-xs lg:text-sm text-blue-700 font-bold mb-6 lg:mb-8 hover:bg-blue-100 bg-blue-50 px-4 py-2 lg:px-6 lg:py-3 rounded-xl w-fit transition shadow-sm border border-blue-100">← Kembali ke Menu Utama</button>
         <h2 class="text-2xl lg:text-4xl font-extrabold text-slate-800 mb-6 lg:mb-10 tracking-tight border-b pb-4 lg:pb-6">Dashboard Administrator</h2>
         
+        <!-- GRID ASIMETRIS AGAR TEMPLATE LEBIH BESAR -->
         <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 lg:gap-8">
           
           <!-- Setup Template Kiri (Lebih Lebar: 7 Kolom) -->
           <div class="xl:col-span-7 bg-white p-5 lg:p-8 rounded-[1.5rem] border border-slate-200 shadow-sm flex flex-col">
-            <h3 class="text-base lg:text-xl font-extrabold text-slate-800 mb-4 lg:mb-6 border-b pb-2 lg:pb-3">1. Konfigurasi Template (Gambar, PDF, Word)</h3>
+            <h3 class="text-base lg:text-xl font-extrabold text-slate-800 mb-4 lg:mb-6 border-b pb-2 lg:pb-3">1. Konfigurasi Template (Gambar / PDF)</h3>
             <div class="mb-4 lg:mb-6 flex flex-col sm:flex-row gap-3">
               <input type="file" id="template-upload" accept="image/png, image/jpeg, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document" class="w-full border border-slate-300 p-2 lg:p-3 rounded-xl text-xs lg:text-sm font-medium bg-slate-50 cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs lg:file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition" onchange="loadTemplate(event)">
             </div>
@@ -213,10 +216,19 @@
                 <option value="nomor">Nomor Sertifikat</option>
               </select>
               
-              <div class="grid grid-cols-2 gap-3 lg:gap-5 mt-4 lg:mt-5">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:gap-5 mt-4 lg:mt-5">
                 <div>
                   <label class="block text-[10px] lg:text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">Ukuran Font</label>
                   <input type="number" id="font-size" class="w-full border border-slate-300 p-2.5 lg:p-3.5 rounded-xl text-sm lg:text-base focus:ring-2 focus:ring-blue-500 transition shadow-sm font-medium" onchange="updateElementStyle()">
+                </div>
+                <div>
+                  <label class="block text-[10px] lg:text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">Jenis Font</label>
+                  <select id="font-family" class="w-full border border-slate-300 p-2.5 lg:p-3.5 rounded-xl text-sm lg:text-base focus:ring-2 focus:ring-blue-500 transition shadow-sm font-medium" onchange="updateElementStyle()">
+                    <option value="Arial">Arial / Bawaan</option>
+                    <option value="Pacifico">Pacifico</option>
+                    <option value="Poppins">Poppins</option>
+                    <option value="Times">Times New Roman</option>
+                  </select>
                 </div>
                 <div>
                   <label class="block text-[10px] lg:text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">Alignment</label>
@@ -229,7 +241,7 @@
               </div>
             </div>
 
-            <div id="canvas-container" class="mb-3 rounded-xl border border-slate-300 shadow-inner">
+            <div id="canvas-container" class="mb-3 rounded-xl border border-slate-300 shadow-inner flex justify-center relative">
               <div id="pdf-loading">Memuat Template...</div>
               <canvas id="cert-canvas"></canvas>
             </div>
@@ -350,7 +362,7 @@
 
   <footer class="relative z-10 bg-slate-900/90 backdrop-blur text-white text-center py-4 flex-none border-t border-white/10 pb-6 md:pb-4 transition-all">
     <p class="text-[13px] md:text-sm font-semibold tracking-wide">&copy; <span id="year"></span> KPU Kabupaten Labuhanbatu Utara.</p>
-    <p class="text-[10px] md:text-[11px] text-slate-400 mt-1 uppercase tracking-widest font-bold">v.1.1-Beta PRO</p>
+    <p class="text-[10px] md:text-[11px] text-slate-400 mt-1 normal-case tracking-widest font-bold">v.1.1.5-Beta PRO</p>
   </footer>
 
   <script>
@@ -359,7 +371,7 @@
     // ==========================================
     // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT
     // ==========================================
-    const GAS_URL = "https://script.google.com/macros/s/AKfycby5Er82CgyWaOt_nTx2F8nZWFWiy-eWoJ_vQ_il8fFkWP4xxU_GQSYioQmV4ew0P6rk/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxWfWwgQi6UqjCOv5b9J5jABJuA5ZBniTtMvzMq4_hLDxEstrAwBcCBtbLGddZElfxP/exec"; 
 
     window.addEventListener('DOMContentLoaded', (event) => {
         loadStats();
@@ -500,7 +512,7 @@
       try {
         const res = await fetchAPI('hadir', { data: data }, 'POST');
         if (res.success) { 
-          loadStats();
+          loadStats(); // Update angka pendaftar
           Swal.fire({ icon: 'success', title: 'Berhasil!', text: res.message, customClass: { popup: 'rounded-2xl' } }).then(() => { document.getElementById('form-hadir').reset(); navTo('home'); });
         } else { Swal.fire('Peringatan', res.message, 'warning'); }
       } catch (e) { Swal.fire('Error', 'Gagal menyimpan data', 'error'); }
@@ -595,17 +607,17 @@
       loadAgendaAdmin();
     }
 
-    // --- TEMPLATE LOGIC (PDF/IMAGE/WORD) ---
+    // --- TEMPLATE LOGIC DENGAN FONT KHUSUS ---
     const canvas = document.getElementById('cert-canvas');
     const ctx = canvas.getContext('2d');
-    let basePdfBytes = null; // Menyimpan raw PDF file 
-    let templateImg = new Image(); // Untuk Image atau preview PDF rasterized
+    let basePdfBytes = null; 
+    let templateImg = new Image(); 
     
     let isDragging = false;
     let activeEl = 'nama'; 
     let els = {
-      nama: { x: 50, y: 50, w: 300, h: 50, size: 36, align: 'center', text: '[NAMA PESERTA]' },
-      nomor: { x: 50, y: 150, w: 250, h: 30, size: 16, align: 'center', text: '[NOMOR SERTIFIKAT]' }
+      nama: { x: 50, y: 50, w: 300, h: 50, size: 55, font: 'Pacifico', align: 'center', text: '[NAMA PESERTA]' },
+      nomor: { x: 50, y: 150, w: 250, h: 30, size: 13, font: 'Poppins', align: 'center', text: '[NOMOR SERTIFIKAT]' }
     };
 
     function changeCanvasElement() {
@@ -613,6 +625,7 @@
       if(!els[activeEl]) return;
       document.getElementById('font-size').value = els[activeEl].size;
       document.getElementById('font-align').value = els[activeEl].align;
+      document.getElementById('font-family').value = els[activeEl].font;
       previewCanvas();
     }
 
@@ -620,74 +633,45 @@
       if(!els[activeEl]) return;
       els[activeEl].size = parseInt(document.getElementById('font-size').value) || 20;
       els[activeEl].align = document.getElementById('font-align').value;
+      els[activeEl].font = document.getElementById('font-family').value;
       previewCanvas();
     }
 
-    async function loadTemplate(e) {
+    function loadTemplate(e) {
       const file = e.target.files[0]; 
       if (!file) return; 
       
       document.getElementById('pdf-loading').style.display = 'flex';
-      basePdfBytes = null; // Reset base PDF bytes
+      basePdfBytes = null; 
 
       const reader = new FileReader();
 
-      // Jika file adalah PDF
       if (file.type === 'application/pdf') {
           reader.onload = async function(event) {
               const arrayBuffer = event.target.result;
-              basePdfBytes = new Uint8Array(arrayBuffer); // Simpan bytes asli untuk export nanti agar text searchable
+              basePdfBytes = new Uint8Array(arrayBuffer); 
               
-              // Render PDF page 1 ke kanvas HTML memakai library PDF.js khusus rendering 
-              // Karena kita tidak memuat library full PDF.js render, kita buat peringatan khusus 
-              // untuk mode PDF asli ini. Kita akan menggunakan PDF-Lib langsung saat generate.
-              
-              // Fallback Preview (jika tidak pakai pdf.js worker):
-              // Tampilkan blank putih proporsional ukuran A4 landscape (1123 x 794)
-              canvas.width = 1123; 
-              canvas.height = 794; 
-              canvas.style.width = '100%'; 
-              templateImg.src = ''; // Kosongkan image
-              
-              Swal.fire({
-                  icon: 'info',
-                  title: 'Template PDF Dimuat',
-                  text: 'Preview gambar latar PDF mungkin tidak tampil di kotak kanvas, namun teks akan di-generate persis di atas PDF asli Anda agar tetap bisa di-copy (Searchable). Gunakan kotak ini untuk mengukur estimasi letaknya.',
-                  customClass: { popup: 'rounded-2xl' }
-              });
+              try {
+                  // Fallback preview sederhana krn PDF.js worker berat di load mobile
+                  canvas.width = 1123; 
+                  canvas.height = 794; 
+                  canvas.style.width = '100%'; 
+                  templateImg.src = ''; 
+                  setupDefaultCoords();
+                  document.getElementById('pdf-loading').style.display = 'none';
+                  Swal.fire({
+                    icon: 'info',
+                    title: 'Template PDF Dimuat',
+                    text: 'Gunakan area putih ini untuk mengukur estimasi letak teks. PDF Asli akan digenerate dengan posisi yang sama.',
+                    customClass: { popup: 'rounded-2xl' }
+                  });
 
-              setupDefaultCoords();
-              document.getElementById('pdf-loading').style.display = 'none';
+              } catch (error) {
+                  document.getElementById('pdf-loading').style.display = 'none';
+              }
           };
           reader.readAsArrayBuffer(file);
       } 
-      // Jika file adalah Word (docx)
-      else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-          reader.onload = function(event) {
-              mammoth.extractRawText({arrayBuffer: event.target.result})
-                  .then(function(result){
-                      let text = result.value;
-                      Swal.fire({
-                          icon: 'warning',
-                          title: 'Format Word Kurang Disarankan',
-                          text: 'File Docx hanya diambil teks dasarnya. Sangat disarankan melakukan Save As ke format PDF dari Word sebelum mengunggahnya agar format, logo, dan background terjaga sempurna.',
-                          customClass: { popup: 'rounded-2xl' }
-                      });
-                      canvas.width = 1123; 
-                      canvas.height = 794; 
-                      canvas.style.width = '100%'; 
-                      templateImg.src = ''; 
-                      setupDefaultCoords();
-                      document.getElementById('pdf-loading').style.display = 'none';
-                  })
-                  .catch(function(err){
-                      document.getElementById('pdf-loading').style.display = 'none';
-                      Swal.fire('Error', 'Gagal membaca isi dokumen Word.', 'error');
-                  });
-          };
-          reader.readAsArrayBuffer(file);
-      }
-      // Jika file berupa Gambar (JPG/PNG)
       else {
           reader.onload = function(event) {
               templateImg.onload = function() { 
@@ -699,7 +683,7 @@
               };
               templateImg.onerror = function() {
                   document.getElementById('pdf-loading').style.display = 'none';
-                  Swal.fire('Error', 'File tidak terbaca sebagai gambar/format yang didukung.', 'error');
+                  Swal.fire('Error', 'File tidak terbaca sebagai gambar valid.', 'error');
               };
               templateImg.src = event.target.result;
           };
@@ -714,18 +698,12 @@
     }
 
     function previewCanvas() {
-      // Jika ada image (JPG/PNG)
       if (templateImg.src) {
           ctx.clearRect(0, 0, canvas.width, canvas.height); 
           ctx.drawImage(templateImg, 0, 0, canvas.width, canvas.height);
       } else {
-          // Jika PDF/Docx, gambar background dasar agar kotak panduan terlihat
           ctx.fillStyle = "#ffffff";
           ctx.fillRect(0, 0, canvas.width, canvas.height);
-          ctx.fillStyle = "#cbd5e1";
-          ctx.font = "bold 20px Arial";
-          ctx.textAlign = "center";
-          ctx.fillText("[Preview Background Tidak Tampil untuk Mode PDF Native]", canvas.width/2, canvas.height/2);
       }
       
       Object.keys(els).forEach(key => {
@@ -740,7 +718,11 @@
         ctx.fillRect(el.x, el.y, el.w, el.h);
         ctx.setLineDash([]); 
         
-        ctx.font = `bold ${el.size}px Arial`; ctx.fillStyle = isAct ? "#000" : "#475569"; ctx.textBaseline = "middle";
+        // Aplikasikan Font
+        let fontStr = (el.font === 'Pacifico' || el.font === 'Poppins') ? `'${el.font}'` : el.font;
+        ctx.font = `${el.size}px ${fontStr}`; 
+        ctx.fillStyle = isAct ? "#000" : "#475569"; 
+        ctx.textBaseline = "middle";
         let textX = el.align === 'center' ? el.x + (el.w / 2) : (el.align === 'right' ? el.x + el.w : el.x);
         ctx.textAlign = el.align; 
         ctx.fillText(el.text, textX, el.y + (el.h / 2));
@@ -763,7 +745,7 @@
     canvas.addEventListener('touchend', handleEnd);
     
     function updateRect(e) {
-      if(!templateImg.src && canvas.width === 300) return; // Jika belum load apa-apa
+      if(!templateImg.src && canvas.width === 300) return; 
       const cssRect = canvas.getBoundingClientRect(), clientX = e.touches ? e.touches[0].clientX : e.clientX, clientY = e.touches ? e.touches[0].clientY : e.clientY;
       const scaleX = canvas.width / cssRect.width, scaleY = canvas.height / cssRect.height;
       els[activeEl].x = (clientX - cssRect.left) * scaleX; 
@@ -805,7 +787,38 @@
     
     function toggleCheckAll() { const isChecked = document.getElementById('check-all').checked; document.querySelectorAll('.chk-peserta').forEach(el => el.checked = isChecked); }
 
-    // GENERATE MULTI-PDF DENGAN DUKUNGAN PDF NATIVE (Searchable Text)
+    // FETCH RAW TTF FONTS DARI GITHUB AGAR BISA DI-INJECT KE PDF-LIB / JSPDF
+    const fontUrls = {
+        'Pacifico': 'https://raw.githubusercontent.com/google/fonts/main/ofl/pacifico/Pacifico-Regular.ttf',
+        'Poppins': 'https://raw.githubusercontent.com/google/fonts/main/ofl/poppins/Poppins-Bold.ttf'
+    };
+    let fontCacheBuffer = {};
+    let fontCacheBase64 = {};
+
+    async function getCustomFontData(fontName) {
+        if (fontName === 'Arial' || fontName === 'Times') return null; 
+        if (fontCacheBuffer[fontName]) return true; // Sudah di cache
+
+        try {
+            const res = await fetch(fontUrls[fontName]);
+            const arrayBuffer = await res.arrayBuffer();
+            fontCacheBuffer[fontName] = arrayBuffer;
+            
+            // Konversi ke base64 untuk VFS jsPDF
+            let binary = '';
+            const bytes = new Uint8Array(arrayBuffer);
+            const len = bytes.byteLength;
+            for (let i = 0; i < len; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            fontCacheBase64[fontName] = window.btoa(binary);
+            return true;
+        } catch(e) {
+            console.error("Gagal memuat font", fontName);
+            return false;
+        }
+    }
+
     async function generateMassal() {
       if (!templateImg.src && !basePdfBytes) return Swal.fire('Error', 'Upload template JPG/PNG/PDF terlebih dahulu!', 'error');
       const checks = document.querySelectorAll('.chk-peserta:checked');
@@ -814,55 +827,90 @@
       const modeNomor = document.getElementById('s-tipe-nomor').value;
       const kodeFormat = document.getElementById('s-kode').value || '';
       
+      showLoading(`Mengunduh Font Tambahan...`);
+
+      // Pre-load Fonts
+      for (let key of Object.keys(els)) {
+          let fName = els[key].font;
+          if(fName !== 'Arial' && fName !== 'Times') {
+              await getCustomFontData(fName);
+          }
+      }
+
       showLoading(`Memproses 0 dari ${checks.length} peserta`);
       let successCount = 0;
       
-      // Jika pakai PDF Base Asli (Menggunakan PDF-Lib agar teks searchable)
+      // JIKA PAKAI TEMPLATE PDF ASLI (PDF-LIB)
       if (basePdfBytes) {
           const { PDFDocument, rgb } = PDFLib;
           
           for (let i = 0; i < checks.length; i++) {
             let pIndex = checks[i].value, nama = dbPeserta[pIndex][1], email = dbPeserta[pIndex][3], fileName = `${nama}_${email}.pdf`;
-            
-            // Logika Penomoran
-            let nomorSertifikat = "";
-            if (modeNomor === 'otomatis') {
-                nomorSertifikat = (parseInt(pIndex) + 1) + kodeFormat;
-            } else {
-                nomorSertifikat = dbPeserta[pIndex][7] || "TIDAK-ADA-NOMOR"; // Ambil dari kolom ke-8
-            }
+            let nomorSertifikat = modeNomor === 'otomatis' ? (parseInt(pIndex) + 1) + kodeFormat : (dbPeserta[pIndex][7] || "TIDAK-ADA-NOMOR");
 
             document.querySelector('.swal2-title').innerHTML = `Memproses ${i+1} dari ${checks.length}<br><small class="text-xs md:text-sm text-slate-500 font-bold mt-1 block">${nama}</small><small class="text-[10px] md:text-xs font-mono text-blue-500 block mt-0.5">${nomorSertifikat}</small>`;
             
             try {
-                // Load PDF asli untuk setiap peserta
                 const pdfDoc = await PDFDocument.load(basePdfBytes);
+                pdfDoc.registerFontkit(window.fontkit); // Wajib didaftarkan untuk custom font
+                
+                // Embed Custom Fonts
+                let pdfCustomFonts = {};
+                for (let key of Object.keys(els)) {
+                    let fName = els[key].font;
+                    if(fName !== 'Arial' && fName !== 'Times' && fontCacheBuffer[fName] && !pdfCustomFonts[fName]) {
+                        pdfCustomFonts[fName] = await pdfDoc.embedFont(fontCacheBuffer[fName]);
+                    }
+                }
+
                 const pages = pdfDoc.getPages();
                 const firstPage = pages[0];
                 const { width, height } = firstPage.getSize();
                 
-                // Rasio konversi dari kanvas HTML ke PDF asli
                 const scaleX = width / canvas.width;
                 const scaleY = height / canvas.height;
 
-                // 1. Tulis Nama
-                let nx = els.nama.align === 'center' ? els.nama.x + els.nama.w/2 : (els.nama.align === 'right' ? els.nama.x + els.nama.w : els.nama.x);
+                // TULIS NAMA
+                let fNama = undefined;
+                if(els.nama.font === 'Arial') fNama = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+                else if(els.nama.font === 'Times') fNama = await pdfDoc.embedFont(PDFLib.StandardFonts.TimesRomanBold);
+                else if(pdfCustomFonts[els.nama.font]) fNama = pdfCustomFonts[els.nama.font];
+                else fNama = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold); // Fallback
+                
+                // Penyesuaian alignment untuk PDF-lib (Kalkulasi lebar text asli)
+                let textW_nama = fNama.widthOfTextAtSize(nama, els.nama.size * scaleY);
+                let nx = els.nama.x * scaleX;
+                if (els.nama.align === 'center') nx = (els.nama.x * scaleX) + ((els.nama.w * scaleX) / 2) - (textW_nama / 2);
+                if (els.nama.align === 'right') nx = (els.nama.x * scaleX) + (els.nama.w * scaleX) - textW_nama;
+
                 let ny = els.nama.y + (els.nama.h/2);
                 firstPage.drawText(nama, {
-                    x: nx * scaleX,
-                    y: height - (ny * scaleY), // PDF y-axis is bottom-up
-                    size: els.nama.size * scaleY, // Perkiraan skala font
-                    color: rgb(0, 0, 0),
-                }); // Note: Untuk centering sempurna PDF-lib butuh fontkit width measurement. Ini versi basic.
+                    x: nx,
+                    y: height - (ny * scaleY), 
+                    size: els.nama.size * scaleY, 
+                    font: fNama,
+                    color: rgb(0, 0, 0)
+                }); 
 
-                // 2. Tulis Nomor
-                let nox = els.nomor.align === 'center' ? els.nomor.x + els.nomor.w/2 : (els.nomor.align === 'right' ? els.nomor.x + els.nomor.w : els.nomor.x);
+                // TULIS NOMOR
+                let fNomor = undefined;
+                if(els.nomor.font === 'Arial') fNomor = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+                else if(els.nomor.font === 'Times') fNomor = await pdfDoc.embedFont(PDFLib.StandardFonts.TimesRomanBold);
+                else if(pdfCustomFonts[els.nomor.font]) fNomor = pdfCustomFonts[els.nomor.font];
+                else fNomor = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+                
+                let textW_nomor = fNomor.widthOfTextAtSize(nomorSertifikat, els.nomor.size * scaleY);
+                let nox = els.nomor.x * scaleX;
+                if (els.nomor.align === 'center') nox = (els.nomor.x * scaleX) + ((els.nomor.w * scaleX) / 2) - (textW_nomor / 2);
+                if (els.nomor.align === 'right') nox = (els.nomor.x * scaleX) + (els.nomor.w * scaleX) - textW_nomor;
+
                 let noy = els.nomor.y + (els.nomor.h/2);
                 firstPage.drawText(nomorSertifikat, {
-                    x: nox * scaleX,
+                    x: nox,
                     y: height - (noy * scaleY),
                     size: els.nomor.size * scaleY,
-                    color: rgb(0, 0, 0),
+                    font: fNomor,
+                    color: rgb(0, 0, 0)
                 });
 
                 const pdfBytes = await pdfDoc.saveAsBase64({ dataUri: true });
@@ -871,34 +919,49 @@
             } catch (err) { console.error(err); }
           }
       } 
-      // Jika pakai Image (JPG/PNG - Mode Rasterized / jsPDF lama)
+      // JIKA PAKAI IMAGE (jsPDF)
       else {
           const orientation = canvas.width > canvas.height ? 'l' : 'p';
           for (let i = 0; i < checks.length; i++) {
             let pIndex = checks[i].value, nama = dbPeserta[pIndex][1], email = dbPeserta[pIndex][3], fileName = `${nama}_${email}.pdf`;
-            
-            let nomorSertifikat = "";
-            if (modeNomor === 'otomatis') {
-                nomorSertifikat = (parseInt(pIndex) + 1) + kodeFormat;
-            } else {
-                nomorSertifikat = dbPeserta[pIndex][7] || "TIDAK-ADA-NOMOR";
-            }
+            let nomorSertifikat = modeNomor === 'otomatis' ? (parseInt(pIndex) + 1) + kodeFormat : (dbPeserta[pIndex][7] || "TIDAK-ADA-NOMOR");
 
             document.querySelector('.swal2-title').innerHTML = `Memproses ${i+1} dari ${checks.length}<br><small class="text-xs md:text-sm text-slate-500 font-bold mt-1 block">${nama}</small><small class="text-[10px] md:text-xs font-mono text-blue-500 block mt-0.5">${nomorSertifikat}</small>`;
             
             const pdf = new window.jspdf.jsPDF({ orientation: orientation, unit: 'px', format: [canvas.width, canvas.height] });
+            
+            // Add Custom Fonts to jsPDF
+            for (let key of Object.keys(els)) {
+                let fName = els[key].font;
+                if(fName !== 'Arial' && fName !== 'Times' && fontCacheBase64[fName]) {
+                    pdf.addFileToVFS(`${fName}.ttf`, fontCacheBase64[fName]);
+                    pdf.addFont(`${fName}.ttf`, fName, 'normal');
+                }
+            }
+
             pdf.addImage(templateImg.src, 'JPEG', 0, 0, canvas.width, canvas.height);
             
             // Cetak Nama
             let nx = els.nama.align === 'center' ? els.nama.x + els.nama.w/2 : (els.nama.align === 'right' ? els.nama.x + els.nama.w : els.nama.x);
             let ny = els.nama.y + (els.nama.h/2);
-            pdf.setFont("helvetica", "bold"); pdf.setFontSize(els.nama.size); pdf.setTextColor(0, 0, 0); 
+            
+            if(els.nama.font === 'Arial') pdf.setFont("helvetica", "bold");
+            else if(els.nama.font === 'Times') pdf.setFont("times", "bold");
+            else pdf.setFont(els.nama.font, "normal");
+            
+            pdf.setFontSize(els.nama.size); 
+            pdf.setTextColor(0, 0, 0); 
             pdf.text(nama, nx, ny, { align: els.nama.align, baseline: 'middle' });
 
             // Cetak Nomor
             let nox = els.nomor.align === 'center' ? els.nomor.x + els.nomor.w/2 : (els.nomor.align === 'right' ? els.nomor.x + els.nomor.w : els.nomor.x);
             let noy = els.nomor.y + (els.nomor.h/2);
-            pdf.setFont("helvetica", "normal"); pdf.setFontSize(els.nomor.size); 
+            
+            if(els.nomor.font === 'Arial') pdf.setFont("helvetica", "bold");
+            else if(els.nomor.font === 'Times') pdf.setFont("times", "bold");
+            else pdf.setFont(els.nomor.font, "normal");
+
+            pdf.setFontSize(els.nomor.size); 
             pdf.text(nomorSertifikat, nox, noy, { align: els.nomor.align, baseline: 'middle' });
             
             try { 
