@@ -191,8 +191,24 @@
               </select>
               <div class="grid grid-cols-3 gap-3 mt-3">
                 <div><label class="block text-[10px] font-bold mb-1">Size</label><input type="number" id="font-size" class="w-full border p-2 rounded-xl text-sm" onchange="updateElementStyle()"></div>
-                <div><label class="block text-[10px] font-bold mb-1">Font</label><select id="font-family" class="w-full border p-2 rounded-xl text-sm" onchange="updateElementStyle()"><option value="Arial">Arial</option><option value="Pacifico">Pacifico</option><option value="Poppins">Poppins</option><option value="Times">Times</option></select></div>
-                <div><label class="block text-[10px] font-bold mb-1">Align</label><select id="font-align" class="w-full border p-2 rounded-xl text-sm" onchange="updateElementStyle()"><option value="center">Center</option><option value="left">Left</option><option value="right">Right</option></select></div>
+                <div>
+                  <label class="block text-[10px] font-bold mb-1">Font</label>
+                  <select id="font-family" class="w-full border p-2 rounded-xl text-sm" onchange="updateElementStyle()">
+                    <option value="Arial">Arial</option>
+                    <option value="Pacifico">Pacifico</option>
+                    <option value="Poppins">Poppins</option>
+                    <option value="Times">Times</option>
+                    <option value="Courier">Courier New</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold mb-1">Align</label>
+                  <select id="font-align" class="w-full border p-2 rounded-xl text-sm" onchange="updateElementStyle()">
+                    <option value="left">Left</option>
+                    <option value="center">Center</option>
+                    <option value="right">Right</option>
+                  </select>
+                </div>
               </div>
             </div>
             <div id="canvas-container" class="mb-3 rounded-xl border shadow-inner flex justify-center relative"><div id="pdf-loading">Memuat Template...</div><canvas id="cert-canvas"></canvas></div>
@@ -276,7 +292,7 @@
     <!-- FOOTER DIMASUKKAN KE SINI AGAR TERLIHAT DI MOBILE -->
     <footer class="bg-slate-900/90 backdrop-blur text-white text-center py-4 flex-none border-t border-white/10">
       <p class="text-[13px] md:text-sm font-semibold tracking-wide">&copy; <span id="year"></span> KPU Kabupaten Labuhanbatu Utara.</p>
-      <p class="text-[10px] md:text-[11px] text-slate-400 mt-1 normal-case tracking-widest font-bold">v.0.0.9-Beta</p>
+      <p class="text-[10px] md:text-[11px] text-slate-400 mt-1 uppercase tracking-widest font-bold">v.1.7-Beta PRO</p>
     </footer>
   </div>
 
@@ -286,8 +302,9 @@
     // ==========================================
     // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT
     // ==========================================
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbyPx7j3BikkFvNeZ4EkhKZsl1sV71J8io9Wf0WW9-7Jj72dDAT84pWjN4zsqAv8yMR6/exec"; 
+    const GAS_URL = "URL_GAS_ANDA_DISINI"; 
 
+    // FRONTEND EMAIL CACHE UNTUK ANTI DUPLIKAT CEPAT
     let emailCache = new Set();
 
     window.addEventListener('DOMContentLoaded', (event) => {
@@ -487,7 +504,7 @@
     let isDragging = false; let activeEl = 'nama'; 
     let els = {
       nama: { x: 50, y: 50, w: 300, h: 50, size: 55, font: 'Pacifico', align: 'center', text: '[NAMA PESERTA]' },
-      nomor: { x: 50, y: 150, w: 250, h: 30, size: 13, font: 'Poppins', align: 'center', text: '[NOMOR SERTIFIKAT]' }
+      nomor: { x: 50, y: 150, w: 250, h: 30, size: 13, font: 'Poppins', align: 'left', text: '[NOMOR SERTIFIKAT]' }
     };
 
     function changeCanvasElement() { activeEl = document.getElementById('el-select').value; if(!els[activeEl]) return; document.getElementById('font-size').value = els[activeEl].size; document.getElementById('font-align').value = els[activeEl].align; document.getElementById('font-family').value = els[activeEl].font; previewCanvas(); }
@@ -542,7 +559,10 @@
         ctx.strokeStyle = isAct ? "rgba(239, 68, 68, 0.9)" : "rgba(100, 116, 139, 0.4)"; ctx.lineWidth = isAct ? 4 : 2; if(isAct) ctx.setLineDash([]); else ctx.setLineDash([5, 5]);
         ctx.strokeRect(el.x, el.y, el.w, el.h); ctx.fillStyle = isAct ? "rgba(239, 68, 68, 0.15)" : "transparent"; ctx.fillRect(el.x, el.y, el.w, el.h); ctx.setLineDash([]); 
         
-        let fontStr = (el.font === 'Pacifico' || el.font === 'Poppins') ? `'${el.font}'` : el.font;
+        let fontStr = el.font;
+        if (el.font === 'Pacifico' || el.font === 'Poppins') fontStr = `'${el.font}'`;
+        else if (el.font === 'Courier') fontStr = "'Courier New', Courier, monospace";
+
         ctx.font = `${el.size}px ${fontStr}`; ctx.fillStyle = isAct ? "#000" : "#475569"; ctx.textBaseline = "middle";
         let textX = el.align === 'center' ? el.x + (el.w / 2) : (el.align === 'right' ? el.x + el.w : el.x);
         ctx.textAlign = el.align; ctx.fillText(el.text, textX, el.y + (el.h / 2));
@@ -582,7 +602,7 @@
     let fontCacheBuffer = {}; let fontCacheBase64 = {};
 
     async function getCustomFontData(fontName) {
-        if (fontName === 'Arial' || fontName === 'Times' || fontCacheBuffer[fontName]) return true; 
+        if (fontName === 'Arial' || fontName === 'Times' || fontName === 'Courier' || fontCacheBuffer[fontName]) return true; 
         try {
             const res = await fetch(fontUrls[fontName]); const arrayBuffer = await res.arrayBuffer(); fontCacheBuffer[fontName] = arrayBuffer;
             let binary = ''; const bytes = new Uint8Array(arrayBuffer); for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
@@ -597,7 +617,7 @@
       const modeNomor = document.getElementById('s-tipe-nomor').value, kodeFormat = document.getElementById('s-kode').value || '';
       
       showLoading(`Mengunduh Font Tambahan...`);
-      for (let key of Object.keys(els)) { let fName = els[key].font; if(fName !== 'Arial' && fName !== 'Times') await getCustomFontData(fName); }
+      for (let key of Object.keys(els)) { let fName = els[key].font; if(fName !== 'Arial' && fName !== 'Times' && fName !== 'Courier') await getCustomFontData(fName); }
 
       showLoading(`Memproses 0 dari ${checks.length}`);
       let successCount = 0;
@@ -613,20 +633,38 @@
                 let pdfCustomFonts = {};
                 for (let key of Object.keys(els)) {
                     let fName = els[key].font;
-                    if(fName !== 'Arial' && fName !== 'Times' && fontCacheBuffer[fName] && !pdfCustomFonts[fName]) pdfCustomFonts[fName] = await pdfDoc.embedFont(fontCacheBuffer[fName]);
+                    if(fName !== 'Arial' && fName !== 'Times' && fName !== 'Courier' && fontCacheBuffer[fName] && !pdfCustomFonts[fName]) pdfCustomFonts[fName] = await pdfDoc.embedFont(fontCacheBuffer[fName]);
                 }
                 const firstPage = pdfDoc.getPages()[0]; const { width, height } = firstPage.getSize();
                 const scaleX = width / canvas.width, scaleY = height / canvas.height;
 
-                let fNama = pdfCustomFonts[els.nama.font] || await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold); 
+                // TULIS NAMA
+                let fNama = undefined;
+                if(els.nama.font === 'Arial') fNama = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+                else if(els.nama.font === 'Times') fNama = await pdfDoc.embedFont(PDFLib.StandardFonts.TimesRomanBold);
+                else if(els.nama.font === 'Courier') fNama = await pdfDoc.embedFont(PDFLib.StandardFonts.CourierBold);
+                else if(pdfCustomFonts[els.nama.font]) fNama = pdfCustomFonts[els.nama.font];
+                else fNama = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold); 
+                
                 let textW_nama = fNama.widthOfTextAtSize(nama, els.nama.size * scaleY);
                 let nx = els.nama.x * scaleX; if (els.nama.align === 'center') nx = nx + ((els.nama.w * scaleX) / 2) - (textW_nama / 2); else if (els.nama.align === 'right') nx = nx + (els.nama.w * scaleX) - textW_nama;
-                firstPage.drawText(nama, { x: nx, y: height - ((els.nama.y + (els.nama.h/2)) * scaleY), size: els.nama.size * scaleY, font: fNama, color: rgb(0, 0, 0) }); 
+                
+                let yOffsetNama = (els.nama.size * scaleY) * 0.3; 
+                firstPage.drawText(nama, { x: nx, y: height - ((els.nama.y + (els.nama.h/2)) * scaleY) - yOffsetNama, size: els.nama.size * scaleY, font: fNama, color: rgb(0, 0, 0) }); 
 
-                let fNomor = pdfCustomFonts[els.nomor.font] || await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+                // TULIS NOMOR
+                let fNomor = undefined;
+                if(els.nomor.font === 'Arial') fNomor = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+                else if(els.nomor.font === 'Times') fNomor = await pdfDoc.embedFont(PDFLib.StandardFonts.TimesRomanBold);
+                else if(els.nomor.font === 'Courier') fNomor = await pdfDoc.embedFont(PDFLib.StandardFonts.CourierBold);
+                else if(pdfCustomFonts[els.nomor.font]) fNomor = pdfCustomFonts[els.nomor.font];
+                else fNomor = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+                
                 let textW_nomor = fNomor.widthOfTextAtSize(nomorSertifikat, els.nomor.size * scaleY);
                 let nox = els.nomor.x * scaleX; if (els.nomor.align === 'center') nox = nox + ((els.nomor.w * scaleX) / 2) - (textW_nomor / 2); else if (els.nomor.align === 'right') nox = nox + (els.nomor.w * scaleX) - textW_nomor;
-                firstPage.drawText(nomorSertifikat, { x: nox, y: height - ((els.nomor.y + (els.nomor.h/2)) * scaleY), size: els.nomor.size * scaleY, font: fNomor, color: rgb(0, 0, 0) });
+                
+                let yOffsetNomor = (els.nomor.size * scaleY) * 0.3;
+                firstPage.drawText(nomorSertifikat, { x: nox, y: height - ((els.nomor.y + (els.nomor.h/2)) * scaleY) - yOffsetNomor, size: els.nomor.size * scaleY, font: fNomor, color: rgb(0, 0, 0) });
 
                 const pdfBytes = await pdfDoc.saveAsBase64({ dataUri: true });
                 const res = await fetchAPI('simpanPdf', { base64Data: pdfBytes, filename: fileName }, 'POST'); 
@@ -644,16 +682,16 @@
             const pdf = new window.jspdf.jsPDF({ orientation: orientation, unit: 'px', format: [canvas.width, canvas.height] });
             for (let key of Object.keys(els)) {
                 let fName = els[key].font;
-                if(fName !== 'Arial' && fName !== 'Times' && fontCacheBase64[fName]) { pdf.addFileToVFS(`${fName}.ttf`, fontCacheBase64[fName]); pdf.addFont(`${fName}.ttf`, fName, 'normal'); }
+                if(fName !== 'Arial' && fName !== 'Times' && fName !== 'Courier' && fontCacheBase64[fName]) { pdf.addFileToVFS(`${fName}.ttf`, fontCacheBase64[fName]); pdf.addFont(`${fName}.ttf`, fName, 'normal'); }
             }
             pdf.addImage(templateImg.src, 'JPEG', 0, 0, canvas.width, canvas.height);
             
             let nx = els.nama.align === 'center' ? els.nama.x + els.nama.w/2 : (els.nama.align === 'right' ? els.nama.x + els.nama.w : els.nama.x);
-            if(els.nama.font === 'Arial') pdf.setFont("helvetica", "bold"); else if(els.nama.font === 'Times') pdf.setFont("times", "bold"); else pdf.setFont(els.nama.font, "normal");
+            if(els.nama.font === 'Arial') pdf.setFont("helvetica", "bold"); else if(els.nama.font === 'Times') pdf.setFont("times", "bold"); else if(els.nama.font === 'Courier') pdf.setFont("courier", "bold"); else pdf.setFont(els.nama.font, "normal");
             pdf.setFontSize(els.nama.size); pdf.setTextColor(0, 0, 0); pdf.text(nama, nx, els.nama.y + (els.nama.h/2), { align: els.nama.align, baseline: 'middle' });
 
             let nox = els.nomor.align === 'center' ? els.nomor.x + els.nomor.w/2 : (els.nomor.align === 'right' ? els.nomor.x + els.nomor.w : els.nomor.x);
-            if(els.nomor.font === 'Arial') pdf.setFont("helvetica", "bold"); else if(els.nomor.font === 'Times') pdf.setFont("times", "bold"); else pdf.setFont(els.nomor.font, "normal");
+            if(els.nomor.font === 'Arial') pdf.setFont("helvetica", "bold"); else if(els.nomor.font === 'Times') pdf.setFont("times", "bold"); else if(els.nomor.font === 'Courier') pdf.setFont("courier", "bold"); else pdf.setFont(els.nomor.font, "normal");
             pdf.setFontSize(els.nomor.size); pdf.text(nomorSertifikat, nox, els.nomor.y + (els.nomor.h/2), { align: els.nomor.align, baseline: 'middle' });
             
             try { 
