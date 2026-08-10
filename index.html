@@ -157,7 +157,7 @@
         <button onclick="navTo('home')" class="text-xs md:text-sm font-bold text-slate-500 mb-5 hover:text-slate-800 w-fit bg-slate-100 px-4 py-2 rounded-xl">← Kembali</button>
         <h2 class="text-2xl lg:text-4xl font-extrabold text-slate-800 mb-6 tracking-tight">Cari Sertifikat</h2>
         <form id="form-download" onsubmit="submitDownload(event)" class="flex flex-col gap-4">
-          <div><label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap (Sesuai Absensi)</label><input type="text" id="d-nama" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-emerald-500 font-medium"></div>
+          <div><label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap</label><input type="text" id="d-nama" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-emerald-500 font-medium"></div>
           <div><label class="block text-xs font-bold text-slate-600 mb-1">Email</label><input type="email" id="d-email" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-emerald-500 font-medium"></div>
           <button type="submit" class="w-full mt-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black py-4 rounded-xl shadow-xl text-sm">Cari & Unduh</button>
         </form>
@@ -251,8 +251,8 @@
           <div class="bg-slate-50 p-5 rounded-[1.5rem] border shadow-sm">
             <h3 class="text-xs font-extrabold text-slate-800 mb-3 uppercase">⚙️ Pengaturan Dasar</h3>
             <div class="flex flex-col gap-3 mb-4">
-              <div><label class="block text-[10px] font-bold">Mulai Buka Absen</label><input type="datetime-local" id="t-start" class="w-full border p-2 rounded-lg text-xs"></div>
-              <div><label class="block text-[10px] font-bold">Tutup Absen</label><input type="datetime-local" id="t-end" class="w-full border p-2 rounded-lg text-xs"></div>
+              <div><label class="block text-[10px] font-bold">Mulai Buka</label><input type="datetime-local" id="t-start" class="w-full border p-2 rounded-lg text-xs"></div>
+              <div><label class="block text-[10px] font-bold">Tutup</label><input type="datetime-local" id="t-end" class="w-full border p-2 rounded-lg text-xs"></div>
               <div>
                 <label class="block text-[10px] font-bold">Sumber Nomor</label>
                 <select id="s-tipe-nomor" class="w-full border p-2 rounded-lg text-xs" onchange="toggleKodeInput()"><option value="otomatis">Urut Otomatis</option><option value="manual">Manual Kolom Sheet</option></select>
@@ -286,7 +286,7 @@
     // ==========================================
     // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT
     // ==========================================
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbwbrAoEDqiNnBmrGp_rVUNkzsi8043C1fN_mWmwYt1C2Kpnk-hw2V45q_gQz1QezMg3/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycby8FgMRTQflgkYW-QmUEGNybC8rNT-8yPXX7Z-Ba-w4_BBu9580FJtrABzIFZxVHGOB/exec"; 
 
     let emailCache = new Set();
 
