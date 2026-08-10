@@ -68,7 +68,7 @@
       <div id="view-home" class="view-section active flex-col justify-center my-auto py-2 w-full">
         <div class="text-center mb-6 md:mb-10 bg-white/80 backdrop-blur-xl p-6 md:p-10 rounded-[2rem] shadow-2xl border border-white/50 max-w-md md:max-w-4xl mx-auto w-full">
           <h2 class="text-2xl sm:text-3xl md:text-5xl font-extrabold text-slate-800 tracking-tight drop-shadow-sm">Layanan Mandiri</h2>
-          <p class="text-xs sm:text-sm md:text-lg text-slate-600 mt-2 font-semibold">Sistem Kehadiran & Informasi KPU Kabupaten Labuhanbatu Utara</p>
+          <p class="text-xs sm:text-sm md:text-lg text-slate-600 mt-2 font-semibold">Kelola kehadiran dan akses sertifikat serta informasi kegiatan KPU Kabupaten Labuhanbatu Utara</p>
           <div class="mt-4 inline-flex items-center gap-3 bg-white/70 backdrop-blur-md px-5 py-2.5 rounded-full border-2 border-emerald-100 shadow-lg">
             <span class="relative flex h-3.5 w-3.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500"></span></span>
             <span class="text-xs md:text-sm font-extrabold text-slate-700 uppercase">Total Pendaftar: <span id="stat-count" class="text-orange-600 mx-1 text-base md:text-xl font-black">0</span> Peserta</span>
@@ -81,7 +81,7 @@
             <div class="absolute -right-4 -bottom-4 text-white/10 text-8xl font-black select-none pointer-events-none group-hover:scale-110 transition-transform">📅</div>
             <div class="relative z-10 flex flex-col gap-3">
               <div class="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-2xl shadow-inner">📅</div>
-              <div><h3 class="text-lg lg:text-xl font-black tracking-wide">Agenda Meeting</h3><p class="text-blue-100 text-[11px] lg:text-xs mt-1 font-medium">Jadwal pertemuan KPU.</p></div>
+              <div><h3 class="text-lg lg:text-xl font-black tracking-wide">Agenda Meeting</h3><p class="text-blue-100 text-[11px] lg:text-xs mt-1 font-medium">Jadwal, ID, password, background, dan lainnya.</p></div>
             </div>
           </div>
 
@@ -105,7 +105,7 @@
             <div class="absolute -right-4 -bottom-4 text-white/10 text-8xl font-black select-none pointer-events-none group-hover:scale-110 transition-transform">📚</div>
             <div class="relative z-10 flex flex-col gap-3">
               <div class="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-2xl shadow-inner">📚</div>
-              <div><h3 class="text-lg lg:text-xl font-black tracking-wide">Materi & E-Book</h3><p class="text-purple-100 text-[11px] lg:text-xs mt-1 font-medium">Unduh dokumen materi kegiatan.</p></div>
+              <div><h3 class="text-lg lg:text-xl font-black tracking-wide">Materi & E-Book</h3><p class="text-purple-100 text-[11px] lg:text-xs mt-1 font-medium">Unduh materi dan dokumentasi kegiatan.</p></div>
             </div>
           </div>
 
@@ -128,7 +128,7 @@
         <div id="list-ebook-user" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
       </div>
 
-      <!-- VIEW: DAFTAR HADIR DENGAN INFO BATAS WAKTU -->
+      <!-- VIEW: DAFTAR HADIR -->
       <div id="view-hadir" class="view-section flex-col bg-white/95 backdrop-blur-xl p-6 lg:p-10 rounded-[2rem] shadow-2xl border border-white/60 my-auto max-w-md lg:max-w-2xl mx-auto w-full">
         <button onclick="navTo('home')" class="text-xs md:text-sm font-bold text-slate-500 mb-5 hover:text-slate-800 w-fit bg-slate-100 px-4 py-2 rounded-xl">← Kembali</button>
         <h2 class="text-2xl lg:text-4xl font-extrabold text-slate-800 mb-4 tracking-tight">Form Daftar Hadir</h2>
@@ -154,7 +154,7 @@
         <button onclick="navTo('home')" class="text-xs md:text-sm font-bold text-slate-500 mb-5 hover:text-slate-800 w-fit bg-slate-100 px-4 py-2 rounded-xl">← Kembali</button>
         <h2 class="text-2xl lg:text-4xl font-extrabold text-slate-800 mb-6 tracking-tight">Cari Sertifikat</h2>
         <form id="form-download" onsubmit="submitDownload(event)" class="flex flex-col gap-4">
-          <div><label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap (Sesuai Absensi)</label><input type="text" id="d-nama" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-emerald-500 font-medium"></div>
+          <div><label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap</label><input type="text" id="d-nama" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-emerald-500 font-medium"></div>
           <div><label class="block text-xs font-bold text-slate-600 mb-1">Email</label><input type="email" id="d-email" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-emerald-500 font-medium"></div>
           <button type="submit" class="w-full mt-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black py-4 rounded-xl shadow-xl text-sm">Cari & Unduh</button>
         </form>
@@ -181,7 +181,11 @@
           <!-- Kiri: Setup Template (7 Col) -->
           <div class="xl:col-span-7 bg-white p-5 lg:p-8 rounded-[1.5rem] border border-slate-200 shadow-sm flex flex-col">
             <h3 class="text-base lg:text-xl font-extrabold text-slate-800 mb-4 border-b pb-2">1. Konfigurasi Template</h3>
-            <div class="mb-4"><input type="file" id="template-upload" accept="image/png, image/jpeg, application/pdf" class="w-full border p-2 rounded-xl text-xs bg-slate-50 cursor-pointer" onchange="loadTemplate(event)"></div>
+            <div class="mb-4 flex flex-col md:flex-row gap-3">
+              <input type="file" id="template-upload" accept="image/png, image/jpeg, application/pdf" class="w-full border p-2 rounded-xl text-xs bg-slate-50 cursor-pointer flex-grow" onchange="loadTemplate(event)">
+              <button onclick="muatKonfigurasiTerakhir()" class="bg-blue-50 text-blue-700 px-4 py-2 rounded-xl border border-blue-200 text-xs font-bold hover:bg-blue-100 transition whitespace-nowrap">Muat Pengaturan Terakhir</button>
+            </div>
+            
             <div class="mb-4 bg-blue-50 p-4 rounded-xl border border-blue-100">
               <select id="el-select" class="w-full border p-2.5 rounded-xl text-sm font-bold" onchange="changeCanvasElement()">
                 <option value="nama">Nama Peserta</option><option value="nomor">Nomor Sertifikat</option>
@@ -243,11 +247,11 @@
           </div>
         </div>
         
-        <!-- Pengaturan Waktu & Password -->
-        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="bg-slate-50 p-5 rounded-[1.5rem] border shadow-sm">
-            <h3 class="text-xs font-extrabold text-slate-800 mb-3 uppercase">⚙️ Pengaturan Dasar</h3>
-            <div class="flex flex-col gap-3 mb-4">
+        <!-- Pengaturan Waktu, Sandi & Email -->
+        <div class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 bg-slate-50 p-5 rounded-[1.5rem] border shadow-sm">
+            <h3 class="text-xs font-extrabold text-slate-800 mb-3 uppercase">⚙️ Pengaturan Dasar & Waktu</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
               <div><label class="block text-[10px] font-bold">Mulai Buka</label><input type="datetime-local" id="t-start" class="w-full border p-2 rounded-lg text-xs"></div>
               <div><label class="block text-[10px] font-bold">Tutup</label><input type="datetime-local" id="t-end" class="w-full border p-2 rounded-lg text-xs"></div>
               <div>
@@ -255,14 +259,18 @@
                 <select id="s-tipe-nomor" class="w-full border p-2 rounded-lg text-xs" onchange="toggleKodeInput()"><option value="otomatis">Urut Otomatis</option><option value="manual">Manual Kolom Sheet</option></select>
               </div>
               <div id="kode-container"><label class="block text-[10px] font-bold">Format Kode</label><input type="text" id="s-kode" placeholder="/HM.06-Kt/1223/2/2026" class="w-full border p-2 rounded-lg text-xs font-mono"></div>
+              <div class="sm:col-span-2"><label class="block text-[10px] font-bold">Email Administrator</label><input type="email" id="a-email" placeholder="admin@kpu.go.id" class="w-full border p-2 rounded-lg text-xs"></div>
             </div>
             <button onclick="saveSettings()" class="w-full bg-blue-600 text-white font-bold py-2.5 rounded-lg text-xs">Simpan Pengaturan</button>
           </div>
-          <div class="bg-slate-50 p-5 rounded-[1.5rem] border shadow-sm">
-            <h3 class="text-xs font-extrabold text-slate-800 mb-3 uppercase">🔐 Password Admin</h3>
-            <div class="flex flex-col gap-3 mb-4 mt-2">
-              <input type="password" id="p-old" placeholder="Password Lama" class="w-full border p-2.5 rounded-lg text-xs">
-              <input type="password" id="p-new" placeholder="Password Baru" class="w-full border p-2.5 rounded-lg text-xs">
+          
+          <div class="bg-slate-50 p-5 rounded-[1.5rem] border shadow-sm flex flex-col justify-between">
+            <div>
+              <h3 class="text-xs font-extrabold text-slate-800 mb-3 uppercase">🔐 Password Admin</h3>
+              <div class="flex flex-col gap-3 mb-4 mt-2">
+                <input type="password" id="p-old" placeholder="Password Lama" class="w-full border p-2.5 rounded-lg text-xs">
+                <input type="password" id="p-new" placeholder="Password Baru" class="w-full border p-2.5 rounded-lg text-xs">
+              </div>
             </div>
             <button onclick="changePassword()" class="w-full bg-red-600 text-white font-bold py-2.5 rounded-lg text-xs">Ganti Password</button>
           </div>
@@ -270,10 +278,10 @@
       </div>
     </main>
 
-    <!-- FOOTER DIMASUKKAN KE SINI AGAR TERLIHAT DI MOBILE -->
+    <!-- FOOTER -->
     <footer class="bg-slate-900/90 backdrop-blur text-white text-center py-4 flex-none border-t border-white/10">
       <p class="text-[13px] md:text-sm font-semibold tracking-wide">&copy; <span id="year"></span> KPU Kabupaten Labuhanbatu Utara.</p>
-      <p class="text-[10px] md:text-[11px] text-slate-400 mt-1 normal-case tracking-widest font-bold">v.0.0.9-Beta</p>
+      <p class="text-[10px] md:text-[11px] text-slate-400 mt-1 normal-case tracking-widest font-bold">v.0.0.1-Beta</p>
     </footer>
   </div>
 
@@ -283,10 +291,10 @@
     // ==========================================
     // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT
     // ==========================================
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbxDNvoeHAMGcB-mc4Q-4kPInVrEuaJY-yyG6Pl2_G5ypWzTVObxarCWKEItzB8I8Ndd/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbx8cIHn89ztINVAfWEiBPXSW1X0D1jmRC30kVd3O6V7R8271I7jSoMeJQ20ItSbeNFy/exec"; 
 
-    // FRONTEND EMAIL CACHE UNTUK ANTI DUPLIKAT CEPAT
     let emailCache = new Set();
+    let savedTemplateConfig = ""; 
 
     window.addEventListener('DOMContentLoaded', (event) => {
         loadStats();
@@ -438,13 +446,43 @@
 
     async function loadSettings() {
       const res = await fetchAPI('getSettings'); 
-      if(res) { document.getElementById('t-start').value = res.start||''; document.getElementById('t-end').value = res.end||''; document.getElementById('s-kode').value = res.kode||'/HM.06-Kt/1223/2/2026'; }
+      if(res) { 
+          document.getElementById('t-start').value = res.start||''; 
+          document.getElementById('t-end').value = res.end||''; 
+          document.getElementById('s-kode').value = res.kode||'/HM.06-Kt/1223/2/2026'; 
+          document.getElementById('a-email').value = res.adminEmail||'';
+          savedTemplateConfig = res.templateConfig || "";
+      }
     }
+
+    // MUAT KONFIGURASI TEMPLATE TERAKHIR
+    function muatKonfigurasiTerakhir() {
+        if(!savedTemplateConfig) return Swal.fire('Info', 'Belum ada pengaturan template yang tersimpan sebelumnya.', 'info');
+        try {
+            els = JSON.parse(savedTemplateConfig);
+            changeCanvasElement(); // Update input di layar
+            previewCanvas(); // Redraw canvas
+            Swal.fire({toast: true, position: 'top-end', showConfirmButton: false, timer: 1500, icon: 'success', title: 'Dimuat!'});
+        } catch(e) { console.error("Error parse JSON template"); }
+    }
+
     async function saveSettings() {
       showLoading('Menyimpan...');
-      const res = await fetchAPI('simpanSettings', { start: document.getElementById('t-start').value, end: document.getElementById('t-end').value, kode: document.getElementById('s-kode').value }, 'POST');
-      if(res.success) Swal.fire('Tersimpan', '', 'success');
+      // Ambil Konfigurasi Template saat ini untuk disimpan ke server
+      const currentConfigStr = JSON.stringify(els);
+      const res = await fetchAPI('simpanSettings', { 
+          start: document.getElementById('t-start').value, 
+          end: document.getElementById('t-end').value, 
+          kode: document.getElementById('s-kode').value,
+          templateConfig: currentConfigStr,
+          adminEmail: document.getElementById('a-email').value
+      }, 'POST');
+      if(res.success) {
+          savedTemplateConfig = currentConfigStr;
+          Swal.fire('Tersimpan', 'Pengaturan waktu dan Posisi Template berhasil disimpan', 'success');
+      }
     }
+
     async function changePassword() {
       showLoading('Memproses...');
       const res = await fetchAPI('ubahPass', { oldPass: document.getElementById('p-old').value, newPass: document.getElementById('p-new').value }, 'POST');
@@ -485,7 +523,6 @@
     let isDragging = false; let activeEl = 'nama'; 
     let els = {
       nama: { x: 50, y: 50, w: 300, h: 50, size: 55, font: 'Pacifico', align: 'center', text: '[NAMA PESERTA]' },
-      // DEFAULT FORMAT NOMOR KINI RATA KIRI, COCOK DITEMPELKAN SETELAH TEKS "Nomor : " DI TEMPLATE
       nomor: { x: 50, y: 150, w: 250, h: 30, size: 13, font: 'Poppins', align: 'left', text: 'Nomor : 1/HM.06-Kt/1223/2/2026' }
     };
 
@@ -510,15 +547,23 @@
                   tempCtx.fillStyle = '#ffffff'; tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
                   await page.render({ canvasContext: tempCtx, viewport: viewport }).promise;
                   
-                  templateImg.onload = function() { templateType = 'pdf-preview'; canvas.width = templateImg.width; canvas.height = templateImg.height; canvas.style.width = '100%'; setupDefaultCoords(); document.getElementById('pdf-loading').style.display = 'none'; };
+                  templateImg.onload = function() { templateType = 'pdf-preview'; canvas.width = templateImg.width; canvas.height = templateImg.height; canvas.style.width = '100%'; 
+                    if(!savedTemplateConfig) setupDefaultCoords(); 
+                    document.getElementById('pdf-loading').style.display = 'none'; 
+                  };
                   templateImg.src = tempCanvas.toDataURL('image/jpeg', 0.8);
               } catch (error) {
-                  templateType = 'fallback'; canvas.width = 1123; canvas.height = 794; canvas.style.width = '100%'; setupDefaultCoords(); document.getElementById('pdf-loading').style.display = 'none';
+                  templateType = 'fallback'; canvas.width = 1123; canvas.height = 794; canvas.style.width = '100%'; 
+                  if(!savedTemplateConfig) setupDefaultCoords(); 
+                  document.getElementById('pdf-loading').style.display = 'none';
               }
           }; reader.readAsArrayBuffer(file);
       } else {
           reader.onload = function(event) {
-              templateImg.onload = function() { templateType = 'image'; canvas.width = templateImg.width; canvas.height = templateImg.height; canvas.style.width = '100%'; setupDefaultCoords(); document.getElementById('pdf-loading').style.display = 'none'; };
+              templateImg.onload = function() { templateType = 'image'; canvas.width = templateImg.width; canvas.height = templateImg.height; canvas.style.width = '100%'; 
+                if(!savedTemplateConfig) setupDefaultCoords(); 
+                document.getElementById('pdf-loading').style.display = 'none'; 
+              };
               templateImg.src = event.target.result;
           }; reader.readAsDataURL(file);
       }
@@ -572,7 +617,7 @@
       let targetX = (clientX - cssRect.left) * scaleX; 
       let targetY = (clientY - cssRect.top) * scaleY; 
 
-      // SMART GUIDES & SNAPPING LOGIC (Presisi)
+      // SMART GUIDES
       const snapThreshold = 15;
       window.snapGuideX = null;
       let w = els[activeEl].w;
@@ -620,7 +665,8 @@
     }
 
     async function generateMassal() {
-      if (templateType === 'none') return Swal.fire('Error', 'Upload template JPG/PNG/PDF terlebih dahulu!', 'error');
+      if (templateType === 'none' && !savedTemplateConfig) return Swal.fire('Error', 'Upload template PDF/Gambar terlebih dahulu!', 'error');
+      
       const checks = document.querySelectorAll('.chk-peserta:checked');
       if (checks.length === 0) return Swal.fire('Peringatan', 'Pilih minimal 1 peserta.', 'warning');
       const modeNomor = document.getElementById('s-tipe-nomor').value, kodeFormat = document.getElementById('s-kode').value || '';
@@ -631,12 +677,12 @@
       showLoading(`Memproses 0 dari ${checks.length}`);
       let successCount = 0;
       
+      // JIKA PAKAI PDF NATIVE (Memerlukan upload ulang PDF tiap kali generate demi keamanan Browser)
       if (basePdfBytes) {
           const { PDFDocument, rgb } = PDFLib;
           for (let i = 0; i < checks.length; i++) {
             let pIndex = checks[i].value, nama = dbPeserta[pIndex][1], email = dbPeserta[pIndex][3], fileName = `${nama}_${email}.pdf`;
             
-            // LOGIKA PENOMORAN DIPERBARUI (Ditambahkan teks "Nomor : " di depan)
             let rawNomor = modeNomor === 'otomatis' ? (parseInt(pIndex) + 1) + kodeFormat : (dbPeserta[pIndex][7] || "TIDAK-ADA-NOMOR");
             let nomorSertifikat = "Nomor : " + rawNomor;
             
@@ -662,7 +708,6 @@
                 let textW_nama = fNama.widthOfTextAtSize(nama, els.nama.size * scaleY);
                 let nx = els.nama.x * scaleX; if (els.nama.align === 'center') nx = nx + ((els.nama.w * scaleX) / 2) - (textW_nama / 2); else if (els.nama.align === 'right') nx = nx + (els.nama.w * scaleX) - textW_nama;
                 
-                // Perbaikan Offset Vertical PDF-Lib agar 100% presisi
                 let yOffsetNama = (els.nama.size * scaleY) * 0.35; 
                 firstPage.drawText(nama, { x: nx, y: height - ((els.nama.y + (els.nama.h/2)) * scaleY) - yOffsetNama, size: els.nama.size * scaleY, font: fNama, color: rgb(0, 0, 0) }); 
 
@@ -686,12 +731,12 @@
             } catch (err) {}
           }
       } 
-      else {
+      // JIKA PAKAI IMAGE (Bisa menggunakan cache dari URL Gambar sebelumnya tanpa upload ulang)
+      else if (templateImg.src) {
           const orientation = canvas.width > canvas.height ? 'l' : 'p';
           for (let i = 0; i < checks.length; i++) {
             let pIndex = checks[i].value, nama = dbPeserta[pIndex][1], email = dbPeserta[pIndex][3], fileName = `${nama}_${email}.pdf`;
             
-            // LOGIKA PENOMORAN DIPERBARUI
             let rawNomor = modeNomor === 'otomatis' ? (parseInt(pIndex) + 1) + kodeFormat : (dbPeserta[pIndex][7] || "TIDAK-ADA-NOMOR");
             let nomorSertifikat = "Nomor : " + rawNomor;
             
