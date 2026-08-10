@@ -10,7 +10,6 @@
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
   
-  <!-- IMPORT GOOGLE FONTS -->
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -39,7 +38,7 @@
 <body class="font-sans h-[100dvh] w-screen overflow-hidden flex flex-col select-none relative bg-slate-900 bg-[url('https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center bg-no-repeat">
   <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[3px] z-0"></div>
 
-  <!-- FLOATING WA SUPPORT BUTTON (Posisi diturunkan ke bottom-6) -->
+  <!-- FLOATING WA SUPPORT BUTTON -->
   <a href="https://wa.me/6281263184787" target="_blank" class="fixed bottom-6 md:bottom-8 right-4 md:right-8 bg-green-500/90 backdrop-blur-sm text-white p-3.5 md:px-5 md:py-3 rounded-full shadow-[0_10px_40px_-10px_rgba(34,197,94,0.6)] hover:-translate-y-1 hover:bg-green-600 transition-all duration-300 z-50 flex items-center gap-2 border-2 border-white/20">
     <span class="text-2xl drop-shadow-md">💬</span>
     <span class="inline font-bold text-sm tracking-wide">Butuh Bantuan?</span>
@@ -62,14 +61,14 @@
       </div>
     </header>
 
-    <!-- KONTEN TENGAH (Bisa di-scroll) -->
+    <!-- KONTEN TENGAH -->
     <main class="flex-grow w-full px-4 py-6 overflow-y-auto custom-scroll flex flex-col pb-24 md:pb-12">
       
       <!-- VIEW: HOME -->
       <div id="view-home" class="view-section active flex-col justify-center my-auto py-2 w-full">
         <div class="text-center mb-6 md:mb-10 bg-white/80 backdrop-blur-xl p-6 md:p-10 rounded-[2rem] shadow-2xl border border-white/50 max-w-md md:max-w-4xl mx-auto w-full">
           <h2 class="text-2xl sm:text-3xl md:text-5xl font-extrabold text-slate-800 tracking-tight drop-shadow-sm">Layanan Mandiri</h2>
-          <p class="text-xs sm:text-sm md:text-lg text-slate-600 mt-2 font-semibold">Kelola kehadiran dan akses sertifikat serta informasi kegiatan KPU Kabupaten Labuhanbatu Utara</p>
+          <p class="text-xs sm:text-sm md:text-lg text-slate-600 mt-2 font-semibold">Sistem Kehadiran & Informasi KPU Kabupaten Labuhanbatu Utara</p>
           <div class="mt-4 inline-flex items-center gap-3 bg-white/70 backdrop-blur-md px-5 py-2.5 rounded-full border-2 border-emerald-100 shadow-lg">
             <span class="relative flex h-3.5 w-3.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500"></span></span>
             <span class="text-xs md:text-sm font-extrabold text-slate-700 uppercase">Total Pendaftar: <span id="stat-count" class="text-orange-600 mx-1 text-base md:text-xl font-black">0</span> Peserta</span>
@@ -82,7 +81,7 @@
             <div class="absolute -right-4 -bottom-4 text-white/10 text-8xl font-black select-none pointer-events-none group-hover:scale-110 transition-transform">📅</div>
             <div class="relative z-10 flex flex-col gap-3">
               <div class="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-2xl shadow-inner">📅</div>
-              <div><h3 class="text-lg lg:text-xl font-black tracking-wide">Agenda Meeting</h3><p class="text-blue-100 text-[11px] lg:text-xs mt-1 font-medium">Jadwal, ID, password, background, dan lainnya.</p></div>
+              <div><h3 class="text-lg lg:text-xl font-black tracking-wide">Agenda Meeting</h3><p class="text-blue-100 text-[11px] lg:text-xs mt-1 font-medium">Jadwal pertemuan KPU.</p></div>
             </div>
           </div>
 
@@ -106,7 +105,7 @@
             <div class="absolute -right-4 -bottom-4 text-white/10 text-8xl font-black select-none pointer-events-none group-hover:scale-110 transition-transform">📚</div>
             <div class="relative z-10 flex flex-col gap-3">
               <div class="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-2xl shadow-inner">📚</div>
-              <div><h3 class="text-lg lg:text-xl font-black tracking-wide">Materi & E-Book</h3><p class="text-purple-100 text-[11px] lg:text-xs mt-1 font-medium">Unduh materi dan dokumentasi kegiatan.</p></div>
+              <div><h3 class="text-lg lg:text-xl font-black tracking-wide">Materi & E-Book</h3><p class="text-purple-100 text-[11px] lg:text-xs mt-1 font-medium">Unduh dokumen materi kegiatan.</p></div>
             </div>
           </div>
 
@@ -134,9 +133,7 @@
         <button onclick="navTo('home')" class="text-xs md:text-sm font-bold text-slate-500 mb-5 hover:text-slate-800 w-fit bg-slate-100 px-4 py-2 rounded-xl">← Kembali</button>
         <h2 class="text-2xl lg:text-4xl font-extrabold text-slate-800 mb-4 tracking-tight">Form Daftar Hadir</h2>
         
-        <!-- Indikator Batas Waktu akan muncul di sini -->
         <div id="info-waktu-hadir" class="mb-5 hidden text-xs lg:text-sm font-medium text-amber-800 bg-amber-50 p-4 rounded-xl border border-amber-200 shadow-sm leading-relaxed">
-           <!-- Akan diisi via JS -->
         </div>
 
         <form id="form-hadir" onsubmit="submitHadir(event)" class="flex flex-col gap-4">
@@ -157,7 +154,7 @@
         <button onclick="navTo('home')" class="text-xs md:text-sm font-bold text-slate-500 mb-5 hover:text-slate-800 w-fit bg-slate-100 px-4 py-2 rounded-xl">← Kembali</button>
         <h2 class="text-2xl lg:text-4xl font-extrabold text-slate-800 mb-6 tracking-tight">Cari Sertifikat</h2>
         <form id="form-download" onsubmit="submitDownload(event)" class="flex flex-col gap-4">
-          <div><label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap</label><input type="text" id="d-nama" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-emerald-500 font-medium"></div>
+          <div><label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap (Sesuai Absensi)</label><input type="text" id="d-nama" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-emerald-500 font-medium"></div>
           <div><label class="block text-xs font-bold text-slate-600 mb-1">Email</label><input type="email" id="d-email" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-emerald-500 font-medium"></div>
           <button type="submit" class="w-full mt-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black py-4 rounded-xl shadow-xl text-sm">Cari & Unduh</button>
         </form>
@@ -191,24 +188,8 @@
               </select>
               <div class="grid grid-cols-3 gap-3 mt-3">
                 <div><label class="block text-[10px] font-bold mb-1">Size</label><input type="number" id="font-size" class="w-full border p-2 rounded-xl text-sm" onchange="updateElementStyle()"></div>
-                <div>
-                  <label class="block text-[10px] font-bold mb-1">Font</label>
-                  <select id="font-family" class="w-full border p-2 rounded-xl text-sm" onchange="updateElementStyle()">
-                    <option value="Arial">Arial</option>
-                    <option value="Pacifico">Pacifico</option>
-                    <option value="Poppins">Poppins</option>
-                    <option value="Times">Times</option>
-                    <option value="Courier">Courier New</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-[10px] font-bold mb-1">Align</label>
-                  <select id="font-align" class="w-full border p-2 rounded-xl text-sm" onchange="updateElementStyle()">
-                    <option value="left">Left</option>
-                    <option value="center">Center</option>
-                    <option value="right">Right</option>
-                  </select>
-                </div>
+                <div><label class="block text-[10px] font-bold mb-1">Font</label><select id="font-family" class="w-full border p-2 rounded-xl text-sm" onchange="updateElementStyle()"><option value="Arial">Arial</option><option value="Pacifico">Pacifico</option><option value="Poppins">Poppins</option><option value="Times">Times</option><option value="Courier">Courier New</option></select></div>
+                <div><label class="block text-[10px] font-bold mb-1">Align</label><select id="font-align" class="w-full border p-2 rounded-xl text-sm" onchange="updateElementStyle()"><option value="center">Center</option><option value="left">Left</option><option value="right">Right</option></select></div>
               </div>
             </div>
             <div id="canvas-container" class="mb-3 rounded-xl border shadow-inner flex justify-center relative"><div id="pdf-loading">Memuat Template...</div><canvas id="cert-canvas"></canvas></div>
@@ -292,7 +273,7 @@
     <!-- FOOTER DIMASUKKAN KE SINI AGAR TERLIHAT DI MOBILE -->
     <footer class="bg-slate-900/90 backdrop-blur text-white text-center py-4 flex-none border-t border-white/10">
       <p class="text-[13px] md:text-sm font-semibold tracking-wide">&copy; <span id="year"></span> KPU Kabupaten Labuhanbatu Utara.</p>
-      <p class="text-[10px] md:text-[11px] text-slate-400 mt-1 uppercase tracking-widest font-bold">v.1.7-Beta PRO</p>
+      <p class="text-[10px] md:text-[11px] text-slate-400 mt-1 normal-case tracking-widest font-bold">v.0.0.9-Beta</p>
     </footer>
   </div>
 
@@ -504,7 +485,8 @@
     let isDragging = false; let activeEl = 'nama'; 
     let els = {
       nama: { x: 50, y: 50, w: 300, h: 50, size: 55, font: 'Pacifico', align: 'center', text: '[NAMA PESERTA]' },
-      nomor: { x: 50, y: 150, w: 250, h: 30, size: 13, font: 'Poppins', align: 'left', text: '[NOMOR SERTIFIKAT]' }
+      // DEFAULT FORMAT NOMOR KINI RATA KIRI, COCOK DITEMPELKAN SETELAH TEKS "Nomor : " DI TEMPLATE
+      nomor: { x: 50, y: 150, w: 250, h: 30, size: 13, font: 'Poppins', align: 'left', text: 'Nomor : 1/HM.06-Kt/1223/2/2026' }
     };
 
     function changeCanvasElement() { activeEl = document.getElementById('el-select').value; if(!els[activeEl]) return; document.getElementById('font-size').value = els[activeEl].size; document.getElementById('font-align').value = els[activeEl].align; document.getElementById('font-family').value = els[activeEl].font; previewCanvas(); }
@@ -554,6 +536,13 @@
       else if (templateType === 'fallback') { ctx.fillStyle = "#e2e8f0"; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = "#64748b"; ctx.font = "bold 20px Arial"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("[Preview Transparan]", canvas.width/2, canvas.height/2); } 
       else return;
       
+      // SMART GUIDES DRAWING
+      if (isDragging && window.snapGuideX !== null) {
+          ctx.save(); ctx.beginPath(); ctx.setLineDash([5, 5]);
+          ctx.moveTo(window.snapGuideX, 0); ctx.lineTo(window.snapGuideX, canvas.height);
+          ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 2; ctx.stroke(); ctx.restore();
+      }
+
       Object.keys(els).forEach(key => {
         let el = els[key]; let isAct = (key === activeEl);
         ctx.strokeStyle = isAct ? "rgba(239, 68, 68, 0.9)" : "rgba(100, 116, 139, 0.4)"; ctx.lineWidth = isAct ? 4 : 2; if(isAct) ctx.setLineDash([]); else ctx.setLineDash([5, 5]);
@@ -571,7 +560,7 @@
       });
     }
 
-    function handleStart(e) { isDragging = true; updateRect(e); } function handleMove(e) { if (isDragging) { updateRect(e); e.preventDefault(); } } function handleEnd() { isDragging = false; }
+    function handleStart(e) { isDragging = true; updateRect(e); } function handleMove(e) { if (isDragging) { updateRect(e); e.preventDefault(); } } function handleEnd() { isDragging = false; window.snapGuideX = null; previewCanvas(); }
     canvas.addEventListener('mousedown', handleStart); canvas.addEventListener('mousemove', handleMove); canvas.addEventListener('mouseup', handleEnd);
     canvas.addEventListener('touchstart', handleStart, {passive: false}); canvas.addEventListener('touchmove', handleMove, {passive: false}); canvas.addEventListener('touchend', handleEnd);
     
@@ -579,7 +568,27 @@
       if(templateType === 'none') return; 
       const cssRect = canvas.getBoundingClientRect(), clientX = e.touches ? e.touches[0].clientX : e.clientX, clientY = e.touches ? e.touches[0].clientY : e.clientY;
       const scaleX = canvas.width / cssRect.width, scaleY = canvas.height / cssRect.height;
-      els[activeEl].x = (clientX - cssRect.left) * scaleX; els[activeEl].y = (clientY - cssRect.top) * scaleY; previewCanvas();
+      
+      let targetX = (clientX - cssRect.left) * scaleX; 
+      let targetY = (clientY - cssRect.top) * scaleY; 
+
+      // SMART GUIDES & SNAPPING LOGIC (Presisi)
+      const snapThreshold = 15;
+      window.snapGuideX = null;
+      let w = els[activeEl].w;
+      let centerX = targetX + w / 2;
+      
+      let canvasCenterX = canvas.width / 2;
+      let otherElKey = activeEl === 'nama' ? 'nomor' : 'nama';
+      let otherEl = els[otherElKey];
+      let otherCenterX = otherEl.x + otherEl.w / 2;
+      let otherLeft = otherEl.x;
+
+      if (Math.abs(centerX - canvasCenterX) < snapThreshold) { targetX = canvasCenterX - w / 2; window.snapGuideX = canvasCenterX; } 
+      else if (Math.abs(centerX - otherCenterX) < snapThreshold) { targetX = otherCenterX - w / 2; window.snapGuideX = otherCenterX; } 
+      else if (Math.abs(targetX - otherLeft) < snapThreshold) { targetX = otherLeft; window.snapGuideX = otherLeft; }
+
+      els[activeEl].x = targetX; els[activeEl].y = targetY; previewCanvas();
     }
 
     let dbPeserta = [];
@@ -626,7 +635,11 @@
           const { PDFDocument, rgb } = PDFLib;
           for (let i = 0; i < checks.length; i++) {
             let pIndex = checks[i].value, nama = dbPeserta[pIndex][1], email = dbPeserta[pIndex][3], fileName = `${nama}_${email}.pdf`;
-            let nomorSertifikat = modeNomor === 'otomatis' ? (parseInt(pIndex) + 1) + kodeFormat : (dbPeserta[pIndex][7] || "TIDAK-ADA-NOMOR");
+            
+            // LOGIKA PENOMORAN DIPERBARUI (Ditambahkan teks "Nomor : " di depan)
+            let rawNomor = modeNomor === 'otomatis' ? (parseInt(pIndex) + 1) + kodeFormat : (dbPeserta[pIndex][7] || "TIDAK-ADA-NOMOR");
+            let nomorSertifikat = "Nomor : " + rawNomor;
+            
             document.querySelector('.swal2-title').innerHTML = `Memproses ${i+1}/${checks.length}<br><small>${nama}</small>`;
             try {
                 const pdfDoc = await PDFDocument.load(basePdfBytes); pdfDoc.registerFontkit(window.fontkit); 
@@ -649,7 +662,8 @@
                 let textW_nama = fNama.widthOfTextAtSize(nama, els.nama.size * scaleY);
                 let nx = els.nama.x * scaleX; if (els.nama.align === 'center') nx = nx + ((els.nama.w * scaleX) / 2) - (textW_nama / 2); else if (els.nama.align === 'right') nx = nx + (els.nama.w * scaleX) - textW_nama;
                 
-                let yOffsetNama = (els.nama.size * scaleY) * 0.3; 
+                // Perbaikan Offset Vertical PDF-Lib agar 100% presisi
+                let yOffsetNama = (els.nama.size * scaleY) * 0.35; 
                 firstPage.drawText(nama, { x: nx, y: height - ((els.nama.y + (els.nama.h/2)) * scaleY) - yOffsetNama, size: els.nama.size * scaleY, font: fNama, color: rgb(0, 0, 0) }); 
 
                 // TULIS NOMOR
@@ -663,7 +677,7 @@
                 let textW_nomor = fNomor.widthOfTextAtSize(nomorSertifikat, els.nomor.size * scaleY);
                 let nox = els.nomor.x * scaleX; if (els.nomor.align === 'center') nox = nox + ((els.nomor.w * scaleX) / 2) - (textW_nomor / 2); else if (els.nomor.align === 'right') nox = nox + (els.nomor.w * scaleX) - textW_nomor;
                 
-                let yOffsetNomor = (els.nomor.size * scaleY) * 0.3;
+                let yOffsetNomor = (els.nomor.size * scaleY) * 0.35;
                 firstPage.drawText(nomorSertifikat, { x: nox, y: height - ((els.nomor.y + (els.nomor.h/2)) * scaleY) - yOffsetNomor, size: els.nomor.size * scaleY, font: fNomor, color: rgb(0, 0, 0) });
 
                 const pdfBytes = await pdfDoc.saveAsBase64({ dataUri: true });
@@ -676,7 +690,11 @@
           const orientation = canvas.width > canvas.height ? 'l' : 'p';
           for (let i = 0; i < checks.length; i++) {
             let pIndex = checks[i].value, nama = dbPeserta[pIndex][1], email = dbPeserta[pIndex][3], fileName = `${nama}_${email}.pdf`;
-            let nomorSertifikat = modeNomor === 'otomatis' ? (parseInt(pIndex) + 1) + kodeFormat : (dbPeserta[pIndex][7] || "TIDAK-ADA-NOMOR");
+            
+            // LOGIKA PENOMORAN DIPERBARUI
+            let rawNomor = modeNomor === 'otomatis' ? (parseInt(pIndex) + 1) + kodeFormat : (dbPeserta[pIndex][7] || "TIDAK-ADA-NOMOR");
+            let nomorSertifikat = "Nomor : " + rawNomor;
+            
             document.querySelector('.swal2-title').innerHTML = `Memproses ${i+1}/${checks.length}<br><small>${nama}</small>`;
             
             const pdf = new window.jspdf.jsPDF({ orientation: orientation, unit: 'px', format: [canvas.width, canvas.height] });
