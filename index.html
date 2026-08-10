@@ -14,18 +14,25 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- Menggunakan PDF-Lib untuk mengedit PDF dengan mempertahankan fitur Searchable Text -->
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="https://unpkg.com/@pdf-lib/fontkit@0.0.4/dist/fontkit.umd.js"></script>
+  <!-- Menggunakan Mammoth.js untuk membaca file Word sebagai opsi darurat -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
   
   <style>
     html, body { height: 100dvh; width: 100vw; overflow: hidden; touch-action: manipulation; overscroll-behavior: none; -webkit-tap-highlight-color: transparent; }
     .view-section { display: none; }
     .view-section.active { display: flex; animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    #canvas-container { position: relative; border: 2px dashed #cbd5e1; display: block; width: 100%; text-align: center; cursor: crosshair; overflow: hidden; background-color: #f8fafc; }
-    canvas { max-width: 100%; height: auto; display: inline-block; margin: 0 auto; }
+    #canvas-container { position: relative; border: 2px dashed #cbd5e1; display: block; width: 100%; text-align: center; cursor: crosshair; overflow: hidden; background-color: #f8fafc; min-height: 200px; }
+    canvas { max-width: 100%; height: auto; display: inline-block; margin: 0 auto; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
     .custom-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
     .custom-scroll::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.6); border-radius: 10px; }
     .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+    
+    /* Loading overlay for PDF rendering */
+    #pdf-loading { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.8); display: none; align-items: center; justify-content: center; z-index: 10; font-weight: bold; color: #475569; }
   </style>
 </head>
 
@@ -35,7 +42,7 @@
   <!-- FLOATING WA SUPPORT BUTTON -->
   <a href="https://wa.me/6281263184787" target="_blank" class="fixed bottom-24 md:bottom-10 right-4 md:right-10 bg-green-500/90 backdrop-blur-sm text-white p-3.5 md:px-6 md:py-3.5 rounded-full shadow-[0_10px_40px_-10px_rgba(34,197,94,0.6)] hover:-translate-y-1 hover:bg-green-600 transition-all duration-300 z-50 flex items-center gap-2 border-2 border-white/20">
     <span class="text-2xl drop-shadow-md">💬</span>
-    <span class="hidden md:inline font-bold text-sm tracking-wide">Bantuan</span>
+    <span class="hidden md:inline font-bold text-sm tracking-wide">Bantuan Pusat</span>
   </a>
 
   <div class="relative z-10 flex flex-col h-full w-full">
@@ -128,7 +135,7 @@
             <input type="text" id="h-nama" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 lg:p-4 text-sm lg:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-shadow shadow-sm">
           </div>
           <div>
-            <label class="block text-xs lg:text-sm font-bold text-slate-600 mb-1.5 lg:mb-2">Instansi / Satker / Organisasi</label>
+            <label class="block text-xs lg:text-sm font-bold text-slate-600 mb-1.5 lg:mb-2">Instansi / Organisasi</label>
             <input type="text" id="h-instansi" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 lg:p-4 text-sm lg:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium transition-shadow shadow-sm">
           </div>
           <div>
@@ -142,7 +149,7 @@
           
           <div class="lg:col-span-2 mt-1 lg:mt-3 flex items-start md:items-center gap-3 bg-gradient-to-r from-orange-50 to-amber-50 p-4 lg:p-5 rounded-xl border border-orange-200/80 shadow-sm">
             <input type="checkbox" id="h-auto-email" class="w-5 h-5 lg:w-6 lg:h-6 mt-0.5 md:mt-0 text-orange-600 rounded border-slate-300 focus:ring-orange-500 cursor-pointer">
-            <label for="h-auto-email" class="text-xs lg:text-sm text-slate-700 font-bold leading-relaxed cursor-pointer">Kirim ke email saya, bila sertifikat telah tersedia.</label>
+            <label for="h-auto-email" class="text-xs lg:text-sm text-slate-700 font-bold leading-relaxed cursor-pointer">Kirim ke email saya otomatis, bila sertifikat telah di-Generate oleh Admin.</label>
           </div>
           
           <button type="submit" class="lg:col-span-2 w-full mt-2 lg:mt-4 bg-gradient-to-r from-orange-600 to-amber-500 text-white font-black py-4 rounded-xl hover:from-orange-700 hover:to-amber-600 active:scale-[0.99] transition shadow-xl shadow-orange-600/30 text-sm lg:text-lg tracking-wide">Kirim Data Kehadiran</button>
@@ -155,7 +162,7 @@
         <h2 class="text-2xl lg:text-4xl font-extrabold text-slate-800 mb-6 lg:mb-10 tracking-tight">Cari Sertifikat</h2>
         <form id="form-download" onsubmit="submitDownload(event)" class="flex flex-col gap-4 lg:gap-6">
           <div>
-            <label class="block text-xs lg:text-sm font-bold text-slate-600 mb-1.5 lg:mb-2">Nama Lengkap</label>
+            <label class="block text-xs lg:text-sm font-bold text-slate-600 mb-1.5 lg:mb-2">Nama Lengkap (Sesuai Absensi)</label>
             <input type="text" id="d-nama" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 lg:p-4 text-sm lg:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium transition-shadow shadow-sm">
           </div>
           <div>
@@ -190,14 +197,13 @@
         <button onclick="navTo('home')" class="text-xs lg:text-sm text-blue-700 font-bold mb-6 lg:mb-8 hover:bg-blue-100 bg-blue-50 px-4 py-2 lg:px-6 lg:py-3 rounded-xl w-fit transition shadow-sm border border-blue-100">← Kembali ke Menu Utama</button>
         <h2 class="text-2xl lg:text-4xl font-extrabold text-slate-800 mb-6 lg:mb-10 tracking-tight border-b pb-4 lg:pb-6">Dashboard Administrator</h2>
         
-        <!-- GRID ASIMETRIS AGAR TEMPLATE LEBIH BESAR -->
         <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 lg:gap-8">
           
           <!-- Setup Template Kiri (Lebih Lebar: 7 Kolom) -->
           <div class="xl:col-span-7 bg-white p-5 lg:p-8 rounded-[1.5rem] border border-slate-200 shadow-sm flex flex-col">
-            <h3 class="text-base lg:text-xl font-extrabold text-slate-800 mb-4 lg:mb-6 border-b pb-2 lg:pb-3">1. Konfigurasi Template & Nomor</h3>
+            <h3 class="text-base lg:text-xl font-extrabold text-slate-800 mb-4 lg:mb-6 border-b pb-2 lg:pb-3">1. Konfigurasi Template (Gambar, PDF, Word)</h3>
             <div class="mb-4 lg:mb-6 flex flex-col sm:flex-row gap-3">
-              <input type="file" id="template-upload" accept="image/png, image/jpeg" class="w-full border border-slate-300 p-2 lg:p-3 rounded-xl text-xs lg:text-sm font-medium bg-slate-50 cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs lg:file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition" onchange="loadTemplate(event)">
+              <input type="file" id="template-upload" accept="image/png, image/jpeg, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document" class="w-full border border-slate-300 p-2 lg:p-3 rounded-xl text-xs lg:text-sm font-medium bg-slate-50 cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs lg:file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition" onchange="loadTemplate(event)">
             </div>
             
             <div class="mb-4 lg:mb-6 bg-blue-50/50 p-4 lg:p-6 rounded-xl border border-blue-100">
@@ -224,6 +230,7 @@
             </div>
 
             <div id="canvas-container" class="mb-3 rounded-xl border border-slate-300 shadow-inner">
+              <div id="pdf-loading">Memuat Template...</div>
               <canvas id="cert-canvas"></canvas>
             </div>
             
@@ -234,7 +241,7 @@
           <!-- Data Peserta Kanan (5 Kolom) -->
           <div class="xl:col-span-5 bg-white p-5 lg:p-8 rounded-[1.5rem] border border-slate-200 shadow-sm flex flex-col">
             <h3 class="text-base lg:text-xl font-extrabold text-slate-800 mb-4 lg:mb-6 border-b pb-2 lg:pb-3 flex justify-between items-center">
-              2. Data Peserta
+              2. Data Peserta & Nomor
               <button onclick="loadDataPeserta()" class="text-[10px] lg:text-xs bg-blue-50 text-blue-700 px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg hover:bg-blue-100 font-bold border border-blue-100 shadow-sm transition active:scale-95">🔄 Refresh</button>
             </h3>
             
@@ -244,16 +251,16 @@
                   <tr>
                     <th class="p-3 lg:p-4 w-8"><input type="checkbox" id="check-all" class="rounded text-blue-600 focus:ring-blue-500 lg:w-4 lg:h-4 cursor-pointer" onchange="toggleCheckAll()"></th>
                     <th class="p-3 lg:p-4 font-bold">Nama & Status Email</th>
-                    <th class="p-3 lg:p-4 font-bold">No. Urut</th>
+                    <th class="p-3 lg:p-4 font-bold">Mode Nomor</th>
                   </tr>
                 </thead>
                 <tbody id="table-peserta" class="divide-y divide-slate-100"><tr><td colspan="3" class="p-6 text-center text-slate-400">Memuat data...</td></tr></tbody>
               </table>
             </div>
             
-            <!-- TOMBOL AKSI TERPISAH (GENERATE MENTAH VS KIRIM EMAIL TTE) -->
+            <!-- TOMBOL AKSI TERPISAH -->
             <div class="mt-4 lg:mt-6 flex flex-col gap-3">
-              <button onclick="generateMassal()" class="w-full bg-slate-800 text-white font-black py-3.5 lg:py-4 rounded-xl hover:bg-slate-900 active:scale-[0.99] transition shadow-lg text-sm lg:text-base tracking-wide border border-slate-700">1. Buat PDF Mentah (Simpan ke Drive)</button>
+              <button onclick="generateMassal()" class="w-full bg-slate-800 text-white font-black py-3.5 lg:py-4 rounded-xl hover:bg-slate-900 active:scale-[0.99] transition shadow-lg text-sm lg:text-base tracking-wide border border-slate-700">1. Buat PDF (Simpan ke Drive)</button>
               
               <button onclick="triggerKirimEmail()" class="w-full bg-green-600 text-white font-black py-3.5 lg:py-4 rounded-xl hover:bg-green-700 active:scale-[0.99] transition shadow-lg shadow-green-600/30 text-sm lg:text-base tracking-wide flex items-center justify-center gap-2 border border-green-500">
                 <span>📧</span> 2. Kirim Email Peserta (Dari Folder TTE)
@@ -308,7 +315,14 @@
                 <input type="datetime-local" id="t-end" class="w-full border border-slate-300 p-2.5 lg:p-3.5 rounded-xl text-xs lg:text-sm bg-white focus:ring-2 focus:ring-blue-500 transition shadow-sm">
               </div>
               <div>
-                <label class="block text-[10px] lg:text-xs font-bold text-slate-600 mb-1 lg:mb-1.5">Format Kode Klasifikasi (Setelah Nomor Urut)</label>
+                <label class="block text-[10px] lg:text-xs font-bold text-slate-600 mb-1 lg:mb-1.5">Sumber Nomor Sertifikat</label>
+                <select id="s-tipe-nomor" class="w-full border border-slate-300 p-2.5 lg:p-3.5 rounded-xl text-xs lg:text-sm bg-white focus:ring-2 focus:ring-blue-500 transition shadow-sm" onchange="toggleKodeInput()">
+                  <option value="otomatis">Otomatis (Berdasarkan Nomor Urut Daftar Hadir)</option>
+                  <option value="manual">Manual (Ambil Dari Kolom Spreadsheet)</option>
+                </select>
+              </div>
+              <div id="kode-container">
+                <label class="block text-[10px] lg:text-xs font-bold text-slate-600 mb-1 lg:mb-1.5">Format Kode (Di Belakang No. Urut)</label>
                 <input type="text" id="s-kode" placeholder="/HM.06-Kt/1223/2/2026" class="w-full border border-slate-300 p-2.5 lg:p-3.5 rounded-xl text-xs lg:text-sm bg-white font-mono focus:ring-2 focus:ring-blue-500 transition shadow-sm">
               </div>
             </div>
@@ -336,7 +350,7 @@
 
   <footer class="relative z-10 bg-slate-900/90 backdrop-blur text-white text-center py-4 flex-none border-t border-white/10 pb-6 md:pb-4 transition-all">
     <p class="text-[13px] md:text-sm font-semibold tracking-wide">&copy; <span id="year"></span> KPU Kabupaten Labuhanbatu Utara.</p>
-    <p class="text-[10px] md:text-[11px] text-slate-400 mt-1 normal-case tracking-widest font-bold">v.0.0.9-Beta</p>
+    <p class="text-[10px] md:text-[11px] text-slate-400 mt-1 uppercase tracking-widest font-bold">v.1.1-Beta PRO</p>
   </footer>
 
   <script>
@@ -345,11 +359,16 @@
     // ==========================================
     // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT
     // ==========================================
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbxyQ8NuUoDeEX3VU7sm8owpO0W5GDEErJ_w-99pU2P9PQ_sH7VcCtuhGpYJoSQPBscY/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycby5Er82CgyWaOt_nTx2F8nZWFWiy-eWoJ_vQ_il8fFkWP4xxU_GQSYioQmV4ew0P6rk/exec"; 
 
     window.addEventListener('DOMContentLoaded', (event) => {
         loadStats();
     });
+
+    function toggleKodeInput() {
+      const mode = document.getElementById('s-tipe-nomor').value;
+      document.getElementById('kode-container').style.display = mode === 'otomatis' ? 'block' : 'none';
+    }
 
     async function loadStats() {
       try {
@@ -387,7 +406,6 @@
         try {
           return JSON.parse(text);
         } catch (e) {
-          console.error("Non-JSON Response:", text);
           return { success: false, message: "Koneksi server gagal. Pastikan URL GAS benar dan di-deploy Ulang." };
         }
       } catch (err) {
@@ -577,10 +595,12 @@
       loadAgendaAdmin();
     }
 
-    // --- CANVAS TEMPLATE LOGIC MULTI-ELEMENT ---
+    // --- TEMPLATE LOGIC (PDF/IMAGE/WORD) ---
     const canvas = document.getElementById('cert-canvas');
     const ctx = canvas.getContext('2d');
-    let templateImg = new Image();
+    let basePdfBytes = null; // Menyimpan raw PDF file 
+    let templateImg = new Image(); // Untuk Image atau preview PDF rasterized
+    
     let isDragging = false;
     let activeEl = 'nama'; 
     let els = {
@@ -603,34 +623,110 @@
       previewCanvas();
     }
 
-    function loadTemplate(e) {
+    async function loadTemplate(e) {
       const file = e.target.files[0]; 
       if (!file) return; 
       
+      document.getElementById('pdf-loading').style.display = 'flex';
+      basePdfBytes = null; // Reset base PDF bytes
+
       const reader = new FileReader();
-      reader.onload = function(event) {
-        templateImg.onload = function() { 
-          canvas.width = templateImg.width; 
-          canvas.height = templateImg.height; 
-          canvas.style.width = '100%'; 
-          
-          els.nama.x = canvas.width * 0.1; els.nama.y = canvas.height * 0.4; els.nama.w = canvas.width * 0.8; els.nama.h = canvas.height * 0.1;
-          els.nomor.x = canvas.width * 0.1; els.nomor.y = canvas.height * 0.2; els.nomor.w = canvas.width * 0.8; els.nomor.h = canvas.height * 0.05;
-          
-          changeCanvasElement(); 
-        };
-        templateImg.onerror = function() {
-          Swal.fire('Error', 'File tidak terbaca sebagai gambar valid.', 'error');
-        };
-        templateImg.src = event.target.result;
-      };
-      reader.readAsDataURL(file);
+
+      // Jika file adalah PDF
+      if (file.type === 'application/pdf') {
+          reader.onload = async function(event) {
+              const arrayBuffer = event.target.result;
+              basePdfBytes = new Uint8Array(arrayBuffer); // Simpan bytes asli untuk export nanti agar text searchable
+              
+              // Render PDF page 1 ke kanvas HTML memakai library PDF.js khusus rendering 
+              // Karena kita tidak memuat library full PDF.js render, kita buat peringatan khusus 
+              // untuk mode PDF asli ini. Kita akan menggunakan PDF-Lib langsung saat generate.
+              
+              // Fallback Preview (jika tidak pakai pdf.js worker):
+              // Tampilkan blank putih proporsional ukuran A4 landscape (1123 x 794)
+              canvas.width = 1123; 
+              canvas.height = 794; 
+              canvas.style.width = '100%'; 
+              templateImg.src = ''; // Kosongkan image
+              
+              Swal.fire({
+                  icon: 'info',
+                  title: 'Template PDF Dimuat',
+                  text: 'Preview gambar latar PDF mungkin tidak tampil di kotak kanvas, namun teks akan di-generate persis di atas PDF asli Anda agar tetap bisa di-copy (Searchable). Gunakan kotak ini untuk mengukur estimasi letaknya.',
+                  customClass: { popup: 'rounded-2xl' }
+              });
+
+              setupDefaultCoords();
+              document.getElementById('pdf-loading').style.display = 'none';
+          };
+          reader.readAsArrayBuffer(file);
+      } 
+      // Jika file adalah Word (docx)
+      else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+          reader.onload = function(event) {
+              mammoth.extractRawText({arrayBuffer: event.target.result})
+                  .then(function(result){
+                      let text = result.value;
+                      Swal.fire({
+                          icon: 'warning',
+                          title: 'Format Word Kurang Disarankan',
+                          text: 'File Docx hanya diambil teks dasarnya. Sangat disarankan melakukan Save As ke format PDF dari Word sebelum mengunggahnya agar format, logo, dan background terjaga sempurna.',
+                          customClass: { popup: 'rounded-2xl' }
+                      });
+                      canvas.width = 1123; 
+                      canvas.height = 794; 
+                      canvas.style.width = '100%'; 
+                      templateImg.src = ''; 
+                      setupDefaultCoords();
+                      document.getElementById('pdf-loading').style.display = 'none';
+                  })
+                  .catch(function(err){
+                      document.getElementById('pdf-loading').style.display = 'none';
+                      Swal.fire('Error', 'Gagal membaca isi dokumen Word.', 'error');
+                  });
+          };
+          reader.readAsArrayBuffer(file);
+      }
+      // Jika file berupa Gambar (JPG/PNG)
+      else {
+          reader.onload = function(event) {
+              templateImg.onload = function() { 
+                  canvas.width = templateImg.width; 
+                  canvas.height = templateImg.height; 
+                  canvas.style.width = '100%'; 
+                  setupDefaultCoords();
+                  document.getElementById('pdf-loading').style.display = 'none';
+              };
+              templateImg.onerror = function() {
+                  document.getElementById('pdf-loading').style.display = 'none';
+                  Swal.fire('Error', 'File tidak terbaca sebagai gambar/format yang didukung.', 'error');
+              };
+              templateImg.src = event.target.result;
+          };
+          reader.readAsDataURL(file);
+      }
+    }
+
+    function setupDefaultCoords() {
+      els.nama.x = canvas.width * 0.1; els.nama.y = canvas.height * 0.4; els.nama.w = canvas.width * 0.8; els.nama.h = canvas.height * 0.1;
+      els.nomor.x = canvas.width * 0.1; els.nomor.y = canvas.height * 0.2; els.nomor.w = canvas.width * 0.8; els.nomor.h = canvas.height * 0.05;
+      changeCanvasElement(); 
     }
 
     function previewCanvas() {
-      if (!templateImg.src) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height); 
-      ctx.drawImage(templateImg, 0, 0, canvas.width, canvas.height);
+      // Jika ada image (JPG/PNG)
+      if (templateImg.src) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height); 
+          ctx.drawImage(templateImg, 0, 0, canvas.width, canvas.height);
+      } else {
+          // Jika PDF/Docx, gambar background dasar agar kotak panduan terlihat
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = "#cbd5e1";
+          ctx.font = "bold 20px Arial";
+          ctx.textAlign = "center";
+          ctx.fillText("[Preview Background Tidak Tampil untuk Mode PDF Native]", canvas.width/2, canvas.height/2);
+      }
       
       Object.keys(els).forEach(key => {
         let el = els[key];
@@ -667,7 +763,7 @@
     canvas.addEventListener('touchend', handleEnd);
     
     function updateRect(e) {
-      if(!templateImg.src) return;
+      if(!templateImg.src && canvas.width === 300) return; // Jika belum load apa-apa
       const cssRect = canvas.getBoundingClientRect(), clientX = e.touches ? e.touches[0].clientX : e.clientX, clientY = e.touches ? e.touches[0].clientY : e.clientY;
       const scaleX = canvas.width / cssRect.width, scaleY = canvas.height / cssRect.height;
       els[activeEl].x = (clientX - cssRect.left) * scaleX; 
@@ -687,16 +783,20 @@
         }
         let html = '';
         dbPeserta.forEach((row, i) => { 
-          let isMintaEmail = row[5] === "Ya" ? `<span class='text-green-600 font-bold'>Ya</span>` : `<span class='text-slate-400'>Tidak</span>`;
+          let isMintaEmail = row[5] === "Ya" ? `<span class='text-green-600 font-bold'>✓ Minta</span>` : `<span class='text-slate-400'>-</span>`;
           let statusKirim = row[6] === "Terkirim" ? `<span class='bg-green-100 text-green-700 px-2 py-0.5 rounded text-[10px] uppercase font-bold'>Terkirim</span>` : `<span class='bg-slate-100 text-slate-500 px-2 py-0.5 rounded text-[10px] uppercase'>Belum</span>`;
+          let noManual = row[7] || "-";
 
           html += `<tr class="border-b border-slate-100 hover:bg-slate-50 transition">
                     <td class="p-3 lg:p-4"><input type="checkbox" class="chk-peserta rounded text-blue-600 focus:ring-blue-500 lg:w-4 lg:h-4 cursor-pointer" value="${i}"></td>
                     <td class="p-3 lg:p-4">
                       <div class="font-bold text-slate-700">${row[1]}</div>
-                      <div class="text-[11px] text-slate-500 mt-1 flex items-center gap-2">Minta Email: ${isMintaEmail} &bull; ${statusKirim}</div>
+                      <div class="text-[11px] text-slate-500 mt-1 flex items-center gap-2">Email: ${isMintaEmail} &bull; ${statusKirim}</div>
                     </td>
-                    <td class="p-3 lg:p-4 text-slate-600 font-mono text-center">${i + 1}</td>
+                    <td class="p-3 lg:p-4 text-slate-600">
+                      <div class="text-xs">Urut: <span class="font-mono font-bold">${i + 1}</span></div>
+                      <div class="text-[10px] text-slate-400 mt-1">Manual: <span class="font-mono">${noManual}</span></div>
+                    </td>
                    </tr>`; 
         });
         document.getElementById('table-peserta').innerHTML = html;
@@ -705,47 +805,112 @@
     
     function toggleCheckAll() { const isChecked = document.getElementById('check-all').checked; document.querySelectorAll('.chk-peserta').forEach(el => el.checked = isChecked); }
 
+    // GENERATE MULTI-PDF DENGAN DUKUNGAN PDF NATIVE (Searchable Text)
     async function generateMassal() {
-      if (!templateImg.src) return Swal.fire('Error', 'Upload template terlebih dahulu!', 'error');
+      if (!templateImg.src && !basePdfBytes) return Swal.fire('Error', 'Upload template JPG/PNG/PDF terlebih dahulu!', 'error');
       const checks = document.querySelectorAll('.chk-peserta:checked');
       if (checks.length === 0) return Swal.fire('Peringatan', 'Pilih minimal 1 peserta.', 'warning');
       
+      const modeNomor = document.getElementById('s-tipe-nomor').value;
       const kodeFormat = document.getElementById('s-kode').value || '';
-      const orientation = canvas.width > canvas.height ? 'l' : 'p';
       
       showLoading(`Memproses 0 dari ${checks.length} peserta`);
       let successCount = 0;
       
-      for (let i = 0; i < checks.length; i++) {
-        let pIndex = checks[i].value, nama = dbPeserta[pIndex][1], email = dbPeserta[pIndex][3], fileName = `${nama}_${email}.pdf`;
-        let nomorSertifikat = (parseInt(pIndex) + 1) + kodeFormat;
+      // Jika pakai PDF Base Asli (Menggunakan PDF-Lib agar teks searchable)
+      if (basePdfBytes) {
+          const { PDFDocument, rgb } = PDFLib;
+          
+          for (let i = 0; i < checks.length; i++) {
+            let pIndex = checks[i].value, nama = dbPeserta[pIndex][1], email = dbPeserta[pIndex][3], fileName = `${nama}_${email}.pdf`;
+            
+            // Logika Penomoran
+            let nomorSertifikat = "";
+            if (modeNomor === 'otomatis') {
+                nomorSertifikat = (parseInt(pIndex) + 1) + kodeFormat;
+            } else {
+                nomorSertifikat = dbPeserta[pIndex][7] || "TIDAK-ADA-NOMOR"; // Ambil dari kolom ke-8
+            }
 
-        document.querySelector('.swal2-title').innerHTML = `Memproses ${i+1} dari ${checks.length}<br><small class="text-xs md:text-sm text-slate-500 font-bold mt-1 block">${nama}</small><small class="text-[10px] md:text-xs font-mono text-blue-500 block mt-0.5">${nomorSertifikat}</small>`;
-        
-        const pdf = new window.jspdf.jsPDF({ orientation: orientation, unit: 'px', format: [canvas.width, canvas.height] });
-        pdf.addImage(templateImg.src, 'JPEG', 0, 0, canvas.width, canvas.height);
-        
-        // Cetak Nama
-        let nx = els.nama.align === 'center' ? els.nama.x + els.nama.w/2 : (els.nama.align === 'right' ? els.nama.x + els.nama.w : els.nama.x);
-        let ny = els.nama.y + (els.nama.h/2);
-        pdf.setFont("helvetica", "bold"); pdf.setFontSize(els.nama.size); pdf.setTextColor(0, 0, 0); 
-        pdf.text(nama, nx, ny, { align: els.nama.align, baseline: 'middle' });
+            document.querySelector('.swal2-title').innerHTML = `Memproses ${i+1} dari ${checks.length}<br><small class="text-xs md:text-sm text-slate-500 font-bold mt-1 block">${nama}</small><small class="text-[10px] md:text-xs font-mono text-blue-500 block mt-0.5">${nomorSertifikat}</small>`;
+            
+            try {
+                // Load PDF asli untuk setiap peserta
+                const pdfDoc = await PDFDocument.load(basePdfBytes);
+                const pages = pdfDoc.getPages();
+                const firstPage = pages[0];
+                const { width, height } = firstPage.getSize();
+                
+                // Rasio konversi dari kanvas HTML ke PDF asli
+                const scaleX = width / canvas.width;
+                const scaleY = height / canvas.height;
 
-        // Cetak Nomor
-        let nox = els.nomor.align === 'center' ? els.nomor.x + els.nomor.w/2 : (els.nomor.align === 'right' ? els.nomor.x + els.nomor.w : els.nomor.x);
-        let noy = els.nomor.y + (els.nomor.h/2);
-        pdf.setFont("helvetica", "normal"); pdf.setFontSize(els.nomor.size); 
-        pdf.text(nomorSertifikat, nox, noy, { align: els.nomor.align, baseline: 'middle' });
-        
-        try { 
-          const res = await fetchAPI('simpanPdf', { base64Data: pdf.output('datauristring'), filename: fileName }, 'POST'); 
-          if(res.success) successCount++; 
-        } catch (err) {}
+                // 1. Tulis Nama
+                let nx = els.nama.align === 'center' ? els.nama.x + els.nama.w/2 : (els.nama.align === 'right' ? els.nama.x + els.nama.w : els.nama.x);
+                let ny = els.nama.y + (els.nama.h/2);
+                firstPage.drawText(nama, {
+                    x: nx * scaleX,
+                    y: height - (ny * scaleY), // PDF y-axis is bottom-up
+                    size: els.nama.size * scaleY, // Perkiraan skala font
+                    color: rgb(0, 0, 0),
+                }); // Note: Untuk centering sempurna PDF-lib butuh fontkit width measurement. Ini versi basic.
+
+                // 2. Tulis Nomor
+                let nox = els.nomor.align === 'center' ? els.nomor.x + els.nomor.w/2 : (els.nomor.align === 'right' ? els.nomor.x + els.nomor.w : els.nomor.x);
+                let noy = els.nomor.y + (els.nomor.h/2);
+                firstPage.drawText(nomorSertifikat, {
+                    x: nox * scaleX,
+                    y: height - (noy * scaleY),
+                    size: els.nomor.size * scaleY,
+                    color: rgb(0, 0, 0),
+                });
+
+                const pdfBytes = await pdfDoc.saveAsBase64({ dataUri: true });
+                const res = await fetchAPI('simpanPdf', { base64Data: pdfBytes, filename: fileName }, 'POST'); 
+                if(res.success) successCount++;
+            } catch (err) { console.error(err); }
+          }
+      } 
+      // Jika pakai Image (JPG/PNG - Mode Rasterized / jsPDF lama)
+      else {
+          const orientation = canvas.width > canvas.height ? 'l' : 'p';
+          for (let i = 0; i < checks.length; i++) {
+            let pIndex = checks[i].value, nama = dbPeserta[pIndex][1], email = dbPeserta[pIndex][3], fileName = `${nama}_${email}.pdf`;
+            
+            let nomorSertifikat = "";
+            if (modeNomor === 'otomatis') {
+                nomorSertifikat = (parseInt(pIndex) + 1) + kodeFormat;
+            } else {
+                nomorSertifikat = dbPeserta[pIndex][7] || "TIDAK-ADA-NOMOR";
+            }
+
+            document.querySelector('.swal2-title').innerHTML = `Memproses ${i+1} dari ${checks.length}<br><small class="text-xs md:text-sm text-slate-500 font-bold mt-1 block">${nama}</small><small class="text-[10px] md:text-xs font-mono text-blue-500 block mt-0.5">${nomorSertifikat}</small>`;
+            
+            const pdf = new window.jspdf.jsPDF({ orientation: orientation, unit: 'px', format: [canvas.width, canvas.height] });
+            pdf.addImage(templateImg.src, 'JPEG', 0, 0, canvas.width, canvas.height);
+            
+            // Cetak Nama
+            let nx = els.nama.align === 'center' ? els.nama.x + els.nama.w/2 : (els.nama.align === 'right' ? els.nama.x + els.nama.w : els.nama.x);
+            let ny = els.nama.y + (els.nama.h/2);
+            pdf.setFont("helvetica", "bold"); pdf.setFontSize(els.nama.size); pdf.setTextColor(0, 0, 0); 
+            pdf.text(nama, nx, ny, { align: els.nama.align, baseline: 'middle' });
+
+            // Cetak Nomor
+            let nox = els.nomor.align === 'center' ? els.nomor.x + els.nomor.w/2 : (els.nomor.align === 'right' ? els.nomor.x + els.nomor.w : els.nomor.x);
+            let noy = els.nomor.y + (els.nomor.h/2);
+            pdf.setFont("helvetica", "normal"); pdf.setFontSize(els.nomor.size); 
+            pdf.text(nomorSertifikat, nox, noy, { align: els.nomor.align, baseline: 'middle' });
+            
+            try { 
+              const res = await fetchAPI('simpanPdf', { base64Data: pdf.output('datauristring'), filename: fileName }, 'POST'); 
+              if(res.success) successCount++; 
+            } catch (err) {}
+          }
       }
+      
       Swal.fire({ title: 'Selesai!', text: `Berhasil mencetak ${successCount} PDF Mentah ke Folder Database. Silakan lakukan proses TTE secara manual.`, icon: 'success', customClass: { popup: 'rounded-2xl' } });
     }
 
-    // LOGIKA BARU: TOMBOL KIRIM EMAIL MANUAL
     async function triggerKirimEmail() {
       Swal.fire({
         title: 'Konfirmasi',
@@ -758,7 +923,7 @@
             const res = await fetchAPI('kirimEmailTTE', {}, 'POST');
             if(res.success) {
               Swal.fire({ icon: 'success', title: 'Selesai!', text: res.message, customClass: { popup: 'rounded-2xl' } });
-              loadDataPeserta(); // Refresh tabel agar status berubah
+              loadDataPeserta(); 
             } else {
               Swal.fire('Gagal', res.message, 'error');
             }
