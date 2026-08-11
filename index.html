@@ -128,7 +128,7 @@
         <div id="list-ebook-user" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
       </div>
 
-      <!-- VIEW: DAFTAR HADIR -->
+      <!-- VIEW: DAFTAR HADIR DENGAN INFO BATAS WAKTU -->
       <div id="view-hadir" class="view-section flex-col bg-white/95 backdrop-blur-xl p-6 lg:p-10 rounded-[2rem] shadow-2xl border border-white/60 my-auto max-w-md lg:max-w-2xl mx-auto w-full">
         <button onclick="navTo('home')" class="text-xs md:text-sm font-bold text-slate-500 mb-5 hover:text-slate-800 w-fit bg-slate-100 px-4 py-2 rounded-xl">← Kembali</button>
         <h2 class="text-2xl lg:text-4xl font-extrabold text-slate-800 mb-4 tracking-tight">Form Daftar Hadir</h2>
@@ -190,10 +190,33 @@
               <select id="el-select" class="w-full border p-2.5 rounded-xl text-sm font-bold" onchange="changeCanvasElement()">
                 <option value="nama">Nama Peserta</option><option value="nomor">Nomor Sertifikat</option>
               </select>
-              <div class="grid grid-cols-3 gap-3 mt-3">
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3">
                 <div><label class="block text-[10px] font-bold mb-1">Size</label><input type="number" id="font-size" class="w-full border p-2 rounded-xl text-sm" onchange="updateElementStyle()"></div>
-                <div><label class="block text-[10px] font-bold mb-1">Font</label><select id="font-family" class="w-full border p-2 rounded-xl text-sm" onchange="updateElementStyle()"><option value="Arial">Arial</option><option value="Pacifico">Pacifico</option><option value="Poppins">Poppins</option><option value="Times">Times</option><option value="Courier">Courier New</option></select></div>
-                <div><label class="block text-[10px] font-bold mb-1">Align</label><select id="font-align" class="w-full border p-2 rounded-xl text-sm" onchange="updateElementStyle()"><option value="center">Center</option><option value="left">Left</option><option value="right">Right</option></select></div>
+                <div>
+                  <label class="block text-[10px] font-bold mb-1">Font</label>
+                  <select id="font-family" class="w-full border p-2 rounded-xl text-sm" onchange="updateElementStyle()">
+                    <option value="Arial">Arial</option>
+                    <option value="Pacifico">Pacifico</option>
+                    <option value="Poppins">Poppins</option>
+                    <option value="Times">Times</option>
+                    <option value="Courier">Courier New</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold mb-1">Style</label>
+                  <select id="font-weight" class="w-full border p-2 rounded-xl text-sm" onchange="updateElementStyle()">
+                    <option value="bold">Bold</option>
+                    <option value="normal">Normal</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold mb-1">Align</label>
+                  <select id="font-align" class="w-full border p-2 rounded-xl text-sm" onchange="updateElementStyle()">
+                    <option value="left">Left</option>
+                    <option value="center">Center</option>
+                    <option value="right">Right</option>
+                  </select>
+                </div>
               </div>
             </div>
             <div id="canvas-container" class="mb-3 rounded-xl border shadow-inner flex justify-center relative"><div id="pdf-loading">Memuat Template...</div><canvas id="cert-canvas"></canvas></div>
@@ -522,12 +545,27 @@
     let basePdfBytes = null; let templateImg = new Image(); let templateType = 'none'; 
     let isDragging = false; let activeEl = 'nama'; 
     let els = {
-      nama: { x: 50, y: 50, w: 300, h: 50, size: 55, font: 'Pacifico', align: 'center', text: '[NAMA PESERTA]' },
-      nomor: { x: 50, y: 150, w: 250, h: 30, size: 13, font: 'Poppins', align: 'left', text: 'Nomor : 1/HM.06-Kt/1223/2/2026' }
+      nama: { x: 50, y: 50, w: 300, h: 50, size: 55, font: 'Pacifico', weight: 'normal', align: 'center', text: '[NAMA PESERTA]' },
+      nomor: { x: 50, y: 150, w: 250, h: 30, size: 13, font: 'Poppins', weight: 'bold', align: 'left', text: 'Nomor : 1/HM.06-Kt/1223/2/2026' }
     };
 
-    function changeCanvasElement() { activeEl = document.getElementById('el-select').value; if(!els[activeEl]) return; document.getElementById('font-size').value = els[activeEl].size; document.getElementById('font-align').value = els[activeEl].align; document.getElementById('font-family').value = els[activeEl].font; previewCanvas(); }
-    function updateElementStyle() { if(!els[activeEl]) return; els[activeEl].size = parseInt(document.getElementById('font-size').value) || 20; els[activeEl].align = document.getElementById('font-align').value; els[activeEl].font = document.getElementById('font-family').value; previewCanvas(); }
+    function changeCanvasElement() { 
+      activeEl = document.getElementById('el-select').value; 
+      if(!els[activeEl]) return; 
+      document.getElementById('font-size').value = els[activeEl].size; 
+      document.getElementById('font-align').value = els[activeEl].align; 
+      document.getElementById('font-family').value = els[activeEl].font; 
+      document.getElementById('font-weight').value = els[activeEl].weight || 'bold'; 
+      previewCanvas(); 
+    }
+    function updateElementStyle() { 
+      if(!els[activeEl]) return; 
+      els[activeEl].size = parseInt(document.getElementById('font-size').value) || 20; 
+      els[activeEl].align = document.getElementById('font-align').value; 
+      els[activeEl].font = document.getElementById('font-family').value; 
+      els[activeEl].weight = document.getElementById('font-weight').value; 
+      previewCanvas(); 
+    }
 
     async function loadTemplate(e) {
       const file = e.target.files[0]; if (!file) return; 
@@ -582,10 +620,17 @@
       else return;
       
       // SMART GUIDES DRAWING
-      if (isDragging && window.snapGuideX !== null) {
+      if (isDragging && (window.snapGuideX !== null || window.snapGuideY !== null)) {
           ctx.save(); ctx.beginPath(); ctx.setLineDash([5, 5]);
-          ctx.moveTo(window.snapGuideX, 0); ctx.lineTo(window.snapGuideX, canvas.height);
-          ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 2; ctx.stroke(); ctx.restore();
+          ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 2; 
+          
+          if (window.snapGuideX !== null) {
+              ctx.moveTo(window.snapGuideX, 0); ctx.lineTo(window.snapGuideX, canvas.height);
+          }
+          if (window.snapGuideY !== null) {
+              ctx.moveTo(0, window.snapGuideY); ctx.lineTo(canvas.width, window.snapGuideY);
+          }
+          ctx.stroke(); ctx.restore();
       }
 
       Object.keys(els).forEach(key => {
@@ -597,7 +642,10 @@
         if (el.font === 'Pacifico' || el.font === 'Poppins') fontStr = `'${el.font}'`;
         else if (el.font === 'Courier') fontStr = "'Courier New', Courier, monospace";
 
-        ctx.font = `${el.size}px ${fontStr}`; ctx.fillStyle = isAct ? "#000" : "#475569"; ctx.textBaseline = "middle";
+        let weightStr = (el.weight === 'normal') ? 'normal' : 'bold';
+        ctx.font = `${weightStr} ${el.size}px ${fontStr}`; 
+        
+        ctx.fillStyle = isAct ? "#000" : "#475569"; ctx.textBaseline = "middle";
         let textX = el.align === 'center' ? el.x + (el.w / 2) : (el.align === 'right' ? el.x + el.w : el.x);
         ctx.textAlign = el.align; ctx.fillText(el.text, textX, el.y + (el.h / 2));
         
@@ -605,7 +653,9 @@
       });
     }
 
-    function handleStart(e) { isDragging = true; updateRect(e); } function handleMove(e) { if (isDragging) { updateRect(e); e.preventDefault(); } } function handleEnd() { isDragging = false; window.snapGuideX = null; previewCanvas(); }
+    function handleStart(e) { isDragging = true; updateRect(e); } 
+    function handleMove(e) { if (isDragging) { updateRect(e); e.preventDefault(); } } 
+    function handleEnd() { isDragging = false; window.snapGuideX = null; window.snapGuideY = null; previewCanvas(); }
     canvas.addEventListener('mousedown', handleStart); canvas.addEventListener('mousemove', handleMove); canvas.addEventListener('mouseup', handleEnd);
     canvas.addEventListener('touchstart', handleStart, {passive: false}); canvas.addEventListener('touchmove', handleMove, {passive: false}); canvas.addEventListener('touchend', handleEnd);
     
@@ -617,21 +667,39 @@
       let targetX = (clientX - cssRect.left) * scaleX; 
       let targetY = (clientY - cssRect.top) * scaleY; 
 
-      // SMART GUIDES
+      // SMART GUIDES (X dan Y)
       const snapThreshold = 15;
       window.snapGuideX = null;
+      window.snapGuideY = null;
+      
       let w = els[activeEl].w;
+      let h = els[activeEl].h;
       let centerX = targetX + w / 2;
+      let centerY = targetY + h / 2;
       
       let canvasCenterX = canvas.width / 2;
+      let canvasCenterY = canvas.height / 2;
+      
       let otherElKey = activeEl === 'nama' ? 'nomor' : 'nama';
       let otherEl = els[otherElKey];
+      
       let otherCenterX = otherEl.x + otherEl.w / 2;
       let otherLeft = otherEl.x;
 
+      let otherCenterY = otherEl.y + otherEl.h / 2;
+      let otherTop = otherEl.y;
+      let otherBottom = otherEl.y + otherEl.h;
+
+      // X-Axis Snap
       if (Math.abs(centerX - canvasCenterX) < snapThreshold) { targetX = canvasCenterX - w / 2; window.snapGuideX = canvasCenterX; } 
       else if (Math.abs(centerX - otherCenterX) < snapThreshold) { targetX = otherCenterX - w / 2; window.snapGuideX = otherCenterX; } 
       else if (Math.abs(targetX - otherLeft) < snapThreshold) { targetX = otherLeft; window.snapGuideX = otherLeft; }
+
+      // Y-Axis Snap (Batas Atas dan Bawah)
+      if (Math.abs(centerY - canvasCenterY) < snapThreshold) { targetY = canvasCenterY - h / 2; window.snapGuideY = canvasCenterY; }
+      else if (Math.abs(centerY - otherCenterY) < snapThreshold) { targetY = otherCenterY - h / 2; window.snapGuideY = otherCenterY; }
+      else if (Math.abs(targetY - otherTop) < snapThreshold) { targetY = otherTop; window.snapGuideY = otherTop; }
+      else if (Math.abs(targetY + h - otherBottom) < snapThreshold) { targetY = otherBottom - h; window.snapGuideY = otherBottom; }
 
       els[activeEl].x = targetX; els[activeEl].y = targetY; previewCanvas();
     }
@@ -698,12 +766,13 @@
                 const scaleX = width / canvas.width, scaleY = height / canvas.height;
 
                 // TULIS NAMA
+                let isNamaBold = els.nama.weight !== 'normal';
                 let fNama = undefined;
-                if(els.nama.font === 'Arial') fNama = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
-                else if(els.nama.font === 'Times') fNama = await pdfDoc.embedFont(PDFLib.StandardFonts.TimesRomanBold);
-                else if(els.nama.font === 'Courier') fNama = await pdfDoc.embedFont(PDFLib.StandardFonts.CourierBold);
+                if(els.nama.font === 'Arial') fNama = await pdfDoc.embedFont(isNamaBold ? PDFLib.StandardFonts.HelveticaBold : PDFLib.StandardFonts.Helvetica);
+                else if(els.nama.font === 'Times') fNama = await pdfDoc.embedFont(isNamaBold ? PDFLib.StandardFonts.TimesRomanBold : PDFLib.StandardFonts.TimesRoman);
+                else if(els.nama.font === 'Courier') fNama = await pdfDoc.embedFont(isNamaBold ? PDFLib.StandardFonts.CourierBold : PDFLib.StandardFonts.Courier);
                 else if(pdfCustomFonts[els.nama.font]) fNama = pdfCustomFonts[els.nama.font];
-                else fNama = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold); 
+                else fNama = await pdfDoc.embedFont(isNamaBold ? PDFLib.StandardFonts.HelveticaBold : PDFLib.StandardFonts.Helvetica); 
                 
                 let textW_nama = fNama.widthOfTextAtSize(nama, els.nama.size * scaleY);
                 let nx = els.nama.x * scaleX; if (els.nama.align === 'center') nx = nx + ((els.nama.w * scaleX) / 2) - (textW_nama / 2); else if (els.nama.align === 'right') nx = nx + (els.nama.w * scaleX) - textW_nama;
@@ -712,12 +781,13 @@
                 firstPage.drawText(nama, { x: nx, y: height - ((els.nama.y + (els.nama.h/2)) * scaleY) - yOffsetNama, size: els.nama.size * scaleY, font: fNama, color: rgb(0, 0, 0) }); 
 
                 // TULIS NOMOR
+                let isNomorBold = els.nomor.weight !== 'normal';
                 let fNomor = undefined;
-                if(els.nomor.font === 'Arial') fNomor = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
-                else if(els.nomor.font === 'Times') fNomor = await pdfDoc.embedFont(PDFLib.StandardFonts.TimesRomanBold);
-                else if(els.nomor.font === 'Courier') fNomor = await pdfDoc.embedFont(PDFLib.StandardFonts.CourierBold);
+                if(els.nomor.font === 'Arial') fNomor = await pdfDoc.embedFont(isNomorBold ? PDFLib.StandardFonts.HelveticaBold : PDFLib.StandardFonts.Helvetica);
+                else if(els.nomor.font === 'Times') fNomor = await pdfDoc.embedFont(isNomorBold ? PDFLib.StandardFonts.TimesRomanBold : PDFLib.StandardFonts.TimesRoman);
+                else if(els.nomor.font === 'Courier') fNomor = await pdfDoc.embedFont(isNomorBold ? PDFLib.StandardFonts.CourierBold : PDFLib.StandardFonts.Courier);
                 else if(pdfCustomFonts[els.nomor.font]) fNomor = pdfCustomFonts[els.nomor.font];
-                else fNomor = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+                else fNomor = await pdfDoc.embedFont(isNomorBold ? PDFLib.StandardFonts.HelveticaBold : PDFLib.StandardFonts.Helvetica);
                 
                 let textW_nomor = fNomor.widthOfTextAtSize(nomorSertifikat, els.nomor.size * scaleY);
                 let nox = els.nomor.x * scaleX; if (els.nomor.align === 'center') nox = nox + ((els.nomor.w * scaleX) / 2) - (textW_nomor / 2); else if (els.nomor.align === 'right') nox = nox + (els.nomor.w * scaleX) - textW_nomor;
@@ -750,11 +820,13 @@
             pdf.addImage(templateImg.src, 'JPEG', 0, 0, canvas.width, canvas.height);
             
             let nx = els.nama.align === 'center' ? els.nama.x + els.nama.w/2 : (els.nama.align === 'right' ? els.nama.x + els.nama.w : els.nama.x);
-            if(els.nama.font === 'Arial') pdf.setFont("helvetica", "bold"); else if(els.nama.font === 'Times') pdf.setFont("times", "bold"); else if(els.nama.font === 'Courier') pdf.setFont("courier", "bold"); else pdf.setFont(els.nama.font, "normal");
+            let wNama = els.nama.weight === 'normal' ? 'normal' : 'bold';
+            if(els.nama.font === 'Arial') pdf.setFont("helvetica", wNama); else if(els.nama.font === 'Times') pdf.setFont("times", wNama); else if(els.nama.font === 'Courier') pdf.setFont("courier", wNama); else pdf.setFont(els.nama.font, "normal");
             pdf.setFontSize(els.nama.size); pdf.setTextColor(0, 0, 0); pdf.text(nama, nx, els.nama.y + (els.nama.h/2), { align: els.nama.align, baseline: 'middle' });
 
             let nox = els.nomor.align === 'center' ? els.nomor.x + els.nomor.w/2 : (els.nomor.align === 'right' ? els.nomor.x + els.nomor.w : els.nomor.x);
-            if(els.nomor.font === 'Arial') pdf.setFont("helvetica", "bold"); else if(els.nomor.font === 'Times') pdf.setFont("times", "bold"); else if(els.nomor.font === 'Courier') pdf.setFont("courier", "bold"); else pdf.setFont(els.nomor.font, "normal");
+            let wNomor = els.nomor.weight === 'normal' ? 'normal' : 'bold';
+            if(els.nomor.font === 'Arial') pdf.setFont("helvetica", wNomor); else if(els.nomor.font === 'Times') pdf.setFont("times", wNomor); else if(els.nomor.font === 'Courier') pdf.setFont("courier", wNomor); else pdf.setFont(els.nomor.font, "normal");
             pdf.setFontSize(els.nomor.size); pdf.text(nomorSertifikat, nox, els.nomor.y + (els.nomor.h/2), { align: els.nomor.align, baseline: 'middle' });
             
             try { 
