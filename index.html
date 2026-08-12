@@ -138,7 +138,7 @@
 
         <form id="form-hadir" onsubmit="submitHadir(event)" class="flex flex-col gap-4">
           <div><label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap (Boleh Pakai Gelar)</label><input type="text" id="h-nama" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-orange-500 font-medium shadow-sm"></div>
-          <div><label class="block text-xs font-bold text-slate-600 mb-1">Instansi / Satker</label><input type="text" id="h-instansi" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-orange-500 font-medium shadow-sm"></div>
+          <div><label class="block text-xs font-bold text-slate-600 mb-1">Instansi / Satker / Organisasi / Lainnya</label><input type="text" id="h-instansi" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-orange-500 font-medium shadow-sm"></div>
           <div><label class="block text-xs font-bold text-slate-600 mb-1">Email Aktif</label><input type="email" id="h-email" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-orange-500 font-medium shadow-sm"></div>
           <div><label class="block text-xs font-bold text-slate-600 mb-1">Nomor HP</label><input type="number" id="h-hp" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-orange-500 font-medium shadow-sm"></div>
           <div class="mt-1 flex items-start gap-3 bg-orange-50 p-4 rounded-xl border border-orange-200">
@@ -154,7 +154,7 @@
         <button onclick="navTo('home')" class="text-xs md:text-sm font-bold text-slate-500 mb-5 hover:text-slate-800 w-fit bg-slate-100 px-4 py-2 rounded-xl">← Kembali</button>
         <h2 class="text-2xl lg:text-4xl font-extrabold text-slate-800 mb-6 tracking-tight">Cari Sertifikat</h2>
         <form id="form-download" onsubmit="submitDownload(event)" class="flex flex-col gap-4">
-          <div><label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap</label><input type="text" id="d-nama" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-emerald-500 font-medium"></div>
+          <div><label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap (Sesuai yang diisi di daftar hadir)</label><input type="text" id="d-nama" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-emerald-500 font-medium"></div>
           <div><label class="block text-xs font-bold text-slate-600 mb-1">Email</label><input type="email" id="d-email" required class="w-full bg-white/80 border border-slate-300 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-emerald-500 font-medium"></div>
           <button type="submit" class="w-full mt-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black py-4 rounded-xl shadow-xl text-sm">Cari & Unduh</button>
         </form>
@@ -304,7 +304,7 @@
     <!-- FOOTER -->
     <footer class="bg-slate-900/90 backdrop-blur text-white text-center py-4 flex-none border-t border-white/10">
       <p class="text-[13px] md:text-sm font-semibold tracking-wide">&copy; <span id="year"></span> KPU Kabupaten Labuhanbatu Utara.</p>
-      <p class="text-[10px] md:text-[11px] text-slate-400 mt-1 normal-case tracking-widest font-bold">v.0.0.1-Beta</p>
+      <p class="text-[10px] md:text-[11px] text-slate-400 mt-1 normal-case tracking-widest font-bold">v.0.0.1-Prototype</p>
     </footer>
   </div>
 
@@ -314,7 +314,7 @@
     // ==========================================
     // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT
     // ==========================================
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbwoNAYbUaCFnqusKfGb2mqrAG05l2T90mJxfUJakrUTS8MdEp4a2ehhOpfUBvVek45j/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwmt0FuyokZHLuu5-0nTqqBrUUyLGvhMyS09lHU459fVDJ53q6Hv1cc-0DeFWQUQ8qp/exec"; 
 
     let emailCache = new Set();
     let savedTemplateConfig = ""; 
@@ -344,7 +344,8 @@
 
     function formatUrl(url) { return /^https?:\/\//i.test(url.trim()) ? url.trim() : 'https://' + url.trim(); }
 
-    async function fetchAPI(action, params = {}, method = 'GET') {
+    // AUTO-RETRY SYSTEM UNTUK MENGATASI CORS / COLD START
+    async function fetchAPI(action, params = {}, method = 'GET', retries = 2) {
       let url = GAS_URL + "?action=" + action;
       let options = { method: method, redirect: "follow" };
       if (method === 'GET') {
@@ -353,10 +354,19 @@
         options.body = JSON.stringify({ action: action, ...params });
         options.headers = { 'Content-Type': 'text/plain;charset=utf-8' }; 
       }
-      try {
-        const response = await fetch(url, options);
-        return await response.json();
-      } catch (err) { return { success: false, message: "Koneksi internet bermasalah/CORS Error." }; }
+      
+      for (let i = 0; i <= retries; i++) {
+          try {
+            const response = await fetch(url, options);
+            return await response.json();
+          } catch (err) { 
+              if (i === retries) {
+                  return { success: false, message: "Koneksi ke server terputus. Silakan coba klik sekali lagi." }; 
+              }
+              // Jeda 1 detik sebelum mencoba lagi (mengatasi Cold Start Google Script)
+              await new Promise(res => setTimeout(res, 1000));
+          }
+      }
     }
 
     document.getElementById('btn-login-nav').addEventListener('click', function(e) {
